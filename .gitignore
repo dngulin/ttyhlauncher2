@@ -1,0 +1,6 @@
+.idea
+*.DotSettings.user
+
+TtyhLauncher/bin
+TtyhLauncher/obj
+TtyhLauncher/logs
