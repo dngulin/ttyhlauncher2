@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TtyhLauncher.Json.Minecraft;
 using TtyhLauncher.Json.Ttyh;
@@ -64,7 +65,15 @@ namespace TtyhLauncher.Profiles {
         }
 
         public bool IsEmpty => _profiles.Count <= 0;
-        public string First => _profiles.Keys.First();
+
+        public string[] Names {
+            get {
+                var names = new string[_profiles.Count];
+                _profiles.Keys.CopyTo(names, 0);
+                Array.Sort(names);
+                return names;
+            }
+        }
 
         private void FindProfiles() {
             if (!Directory.Exists(_profilesPath))
@@ -278,9 +287,11 @@ namespace TtyhLauncher.Profiles {
         private Task<int> RunProcessAsync(Process process) {
             var tcs = new TaskCompletionSource<int>();
 
+            var context = SynchronizationContext.Current;
+            
             process.Exited += (sender, args) => tcs.SetResult(process.ExitCode);
-            process.OutputDataReceived += (sender, args) => _runLogger.WriteLine(args.Data);
-            process.ErrorDataReceived += (sender, args) => _runLogger.WriteLine(args.Data);
+            process.OutputDataReceived += (sender, args) => context.Post(RunLog, args.Data);
+            process.ErrorDataReceived += (sender, args) => context.Post(RunLog, args.Data);
 
             var started = process.Start();
             if (!started) {
@@ -291,6 +302,11 @@ namespace TtyhLauncher.Profiles {
             process.BeginErrorReadLine();
 
             return tcs.Task;
+        }
+
+        private void RunLog(object data) {
+            if (data is string line)
+                _runLogger.WriteLine(line);
         }
     }
 }

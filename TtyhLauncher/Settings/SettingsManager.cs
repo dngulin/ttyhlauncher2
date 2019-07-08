@@ -29,6 +29,31 @@ namespace TtyhLauncher.Settings {
             get => _settings.Password;
             set => _settings.Password = value;
         }
+        
+        public bool OfflineMode {
+            get => _settings.IsOffline;
+            set => _settings.IsOffline = value;
+        }
+
+        public bool SavePassword {
+            get => _settings.SavePassword;
+            set => _settings.SavePassword = value;
+        }
+
+        public bool HideOnRun {
+            get => _settings.HideOnRun;
+            set => _settings.HideOnRun = value;
+        }
+        
+        public int WindowWidth {
+            get => _settings.WindowWidth;
+            set => _settings.WindowWidth = value;
+        }
+        
+        public int WindowHeight {
+            get => _settings.WindowHeight;
+            set => _settings.WindowHeight = value;
+        }
 
         public string Ticket => _settings.Revision;
 
