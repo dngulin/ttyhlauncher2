@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Gtk;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Master;
 using TtyhLauncher.Profiles;
@@ -41,17 +42,28 @@ namespace TtyhLauncher {
                 var profiles = new ProfilesManager(directory, json, logger, appName, appVersion);
                 var ttyhClient = new TtyhClient(masterUrl, appVersion, settings.Ticket, httpClient, serializer, logger);
                 
-                Gtk.Application.Init();
+                Application.Init();
+                GLib.ExceptionManager.UnhandledException += args => {
+                    var msg = (args.ExceptionObject as Exception)?.Message ?? "UNKNOWN_ERROR";
+                    var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, msg);
+                    dialog.Title = "Unhandled Exception";
+                    
+                    dialog.Run();
+                    dialog.Destroy();
+
+                    Application.Quit();
+                };
+                
                 var window = new MainWindow($"{appName} - {appVersion}");
                 
-                var gtkApplication = new Gtk.Application(appId, GLib.ApplicationFlags.None);
+                var gtkApplication = new Application(appId, GLib.ApplicationFlags.None);
                 gtkApplication.Register(GLib.Cancellable.Current);
                 gtkApplication.AddWindow(window);
 
                 var launcher = new Launcher(settings, versions, profiles, httpClient, ttyhClient, window, logger, appName);
                 
                 launcher.Start();
-                Gtk.Application.Run();
+                Application.Run();
             }
         }
     }
