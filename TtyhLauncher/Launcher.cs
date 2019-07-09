@@ -74,8 +74,7 @@ namespace TtyhLauncher {
             _ui.OfflineMode = _settings.OfflineMode;
             _ui.HideOnRun = _settings.HideOnRun;
             
-            // Yes, this API call doesn't work. Guess why? See the MainWindow constructor
-            _ui.SetDefaultSize(_settings.WindowWidth, _settings.WindowHeight);
+            _ui.Resize(_settings.WindowWidth, _settings.WindowHeight);
         }
 
         private void SaveWindowSettings() {
