@@ -65,9 +65,11 @@ namespace TtyhLauncher.Ui {
             
             // Because of the GTK is a piece of shit the `Monospace` property doesn't work for a TextView
             // So, lets use deprecated API
+#pragma warning disable 612
             _logTextView.OverrideFont(new FontDescription {Family = "Monospace"});
+#pragma warning restore 612
 
-            _logTextView.SizeAllocated += (s, a) => _logTextView.ScrollToIter(_logBuffer.EndIter, 0, true, 0, 0);
+            _logTextView.SizeAllocated += (s, a) => _logTextView.ScrollToIter(_logBuffer.EndIter, 0, false, 0, 0);
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
         }
 
@@ -84,13 +86,18 @@ namespace TtyhLauncher.Ui {
             _logBuffer.Insert(ref end, line);
             _logBuffer.Insert(ref end, "\n");
 
-            if (_logBuffer.LineCount >= MaxLogLines) {
-                var cutStart = _logBuffer.StartIter;
-                var cutEnd = _logBuffer.GetIterAtLine(1);
-                _logBuffer.Delete(ref cutStart, ref cutEnd);
-            }
+            if (_logBuffer.LineCount < MaxLogLines) return;
+            
+            var cutStart = _logBuffer.StartIter;
+            var cutEnd = _logBuffer.GetIterAtLine(1);
+            _logBuffer.Delete(ref cutStart, ref cutEnd);
+        }
 
-            _logTextView.ScrollToIter(_logBuffer.EndIter, 0, false, 0, 0);
+        public void ShowErrorMessage(string message) {
+            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, message);
+            dialog.Title = "Error";
+            dialog.Run();
+            dialog.Destroy();
         }
     }
 }

@@ -98,18 +98,19 @@ namespace TtyhLauncher.Profiles {
         }
 
         public bool Contains(string profileId) => _profiles.ContainsKey(profileId);
-        public FullVersionId GetVersion(string profileId) => _profiles[profileId].Version;
+
+        public ProfileData GetProfileData(string id) => _profiles[id].Clone();
 
         public string CreateDefault(CachedPrefixInfo prefixInfo) {
-            var versionId = new FullVersionId(prefixInfo.Id, prefixInfo.LatestVersion);
-            var prefixId = $"{prefixInfo.About} {versionId.Version}";
+            var fullVersion = new FullVersionId(prefixInfo.Id, prefixInfo.LatestVersion);
+            var prefixId = $"{prefixInfo.About} {fullVersion.Version}";
             
-            Create(prefixId, versionId);
+            Create(prefixId, fullVersion);
             
             return prefixId;
         }
 
-        public void Create(string profileId, FullVersionId versionId) {
+        public void Create(string profileId, FullVersionId fullVersion) {
             if (_profiles.ContainsKey(profileId))
                 return;
             
@@ -118,17 +119,17 @@ namespace TtyhLauncher.Profiles {
                 Directory.CreateDirectory(profileDir);
 
             var profilePath = Path.Combine(profileDir, ProfileIndexName);
-            var profileData = new ProfileData {Version = versionId};
+            var profileData = new ProfileData {FullVersion = fullVersion};
             _json.WriteFile(profileData, profilePath);
             
             _profiles.Add(profileId, profileData);
 
-            InternalUpdate(profileDir, versionId);
+            InternalUpdate(profileDir, fullVersion);
         }
 
         public void Update(string profileId) {
             var profileDir = Path.Combine(_profilesPath, profileId);
-            var versionId = _profiles[profileId].Version;
+            var versionId = _profiles[profileId].FullVersion;
             InternalUpdate(profileDir, versionId);
         }
 
@@ -202,8 +203,8 @@ namespace TtyhLauncher.Profiles {
 
         public async Task Run(string profileId, string userName, string clientToken, string accessToken) {
             var profile = _profiles[profileId];
-            var prefix = profile.Version.Prefix;
-            var version = profile.Version.Version;
+            var prefix = profile.FullVersion.Prefix;
+            var version = profile.FullVersion.Version;
             
             var versionIndexPath = Path.Combine(_versionsPath, prefix, version, $"{version}.json");
             var versionIndex = _json.ReadFile<VersionIndex>(versionIndexPath);
