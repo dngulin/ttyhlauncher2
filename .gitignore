@@ -1,6 +1,10 @@
 .idea
 *.DotSettings.user
 
-TtyhLauncher/bin
-TtyhLauncher/obj
-TtyhLauncher/logs
+TtyhLauncher.Core/bin
+TtyhLauncher.Core/obj
+TtyhLauncher.Core/logs
+
+TtyhLauncher.GTK/bin
+TtyhLauncher.GTK/obj
+TtyhLauncher.GTK/logs

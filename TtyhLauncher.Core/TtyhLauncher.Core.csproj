@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <LangVersion>default</LangVersion>
+        <RootNamespace>TtyhLauncher</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\TtyhLauncher.Core.csproj.UnmanagedRegistration.cache" />
+      <_UnmanagedRegistrationCache Remove="obj\TtyhLauncher.Core.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.pdb" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Native.TtyhLauncher.Core.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Native.TtyhLauncher.Core.manifest" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.Core.application" />
+    </ItemGroup>
+
+</Project>
