@@ -7,8 +7,7 @@ namespace TtyhLauncher.Settings.Data {
         
         [JsonProperty("save_password")] public bool SavePassword = true;
         [JsonProperty("hide_on_run")] public bool HideOnRun = true;
-        [JsonProperty("offline")] public bool IsOffline;
-        
+
         [JsonProperty("profile")] public string Profile = "";
         [JsonProperty("revision")] public string Revision = "";
         

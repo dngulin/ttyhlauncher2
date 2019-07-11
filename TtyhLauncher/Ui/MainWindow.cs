@@ -39,6 +39,7 @@ namespace TtyhLauncher.Ui {
 
         public event Action OnPlayButtonClicked;
         public event Action OnTaskCancelClicked;
+        public event Action<bool> OnOfflineModeToggle;
         
         public bool OfflineMode {
             get => _actToggleOffline.Active;
@@ -82,8 +83,10 @@ namespace TtyhLauncher.Ui {
 #pragma warning restore 612
 
             _logTextView.SizeAllocated += (s, a) => _logTextView.ScrollToIter(_logBuffer.EndIter, 0, false, 0, 0);
+            
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
             _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
+            _actToggleOffline.Toggled += (s, a) => OnOfflineModeToggle?.Invoke(_actToggleOffline.Active);;
         }
 
         public void SetInteractable(bool interactable) {

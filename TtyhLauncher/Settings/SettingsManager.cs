@@ -29,11 +29,6 @@ namespace TtyhLauncher.Settings {
             get => _settings.Password;
             set => _settings.Password = value;
         }
-        
-        public bool OfflineMode {
-            get => _settings.IsOffline;
-            set => _settings.IsOffline = value;
-        }
 
         public bool SavePassword {
             get => _settings.SavePassword;

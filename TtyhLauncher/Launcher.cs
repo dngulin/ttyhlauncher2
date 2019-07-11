@@ -47,27 +47,16 @@ namespace TtyhLauncher {
 
             _ui.DeleteEvent += (sender, args) => HandleMainWindowClose();
             _ui.OnPlayButtonClicked += HandlePlayButtonClicked;
-            
+            _ui.OnOfflineModeToggle += HandleOfflineModeToggle;
         }
 
-        public async void Start() {
+        public void Start() {
             _log.Info("Starting...");
-
-            try {
-                await _versions.FetchPrefixes();
-            }
-            catch {
-                // Ask for offline mode?
-            }
-            
-            if (!_profiles.Contains(_settings.Profile) && !_profiles.IsEmpty && _versions.Prefixes.Count > 0) {
-                var defaultPrefix = _versions.Prefixes[0];
-                _settings.Profile = !_profiles.IsEmpty ? _profiles.Names[0] : _profiles.CreateDefault(defaultPrefix);
-                _log.Info($"Created default profile : '{_settings.Profile}'");
-            }
 
             LoadWindowSettings();
             _ui.ShowAll();
+            
+            TryBecomeOnline();
         }
 
         private void HandleMainWindowClose() {
@@ -79,6 +68,48 @@ namespace TtyhLauncher {
             Gtk.Application.Quit();
         }
 
+        private void HandleOfflineModeToggle(bool offline) {
+            if (offline) {
+                _log.Info("Set offline mode");
+                return;
+            }
+
+            TryBecomeOnline();
+        }
+        
+        private async void TryBecomeOnline() {
+            _log.Info("Trying to switch to the online mode...");
+            
+            _ui.SetInteractable(false);
+            _ui.OfflineMode = !await TryFetchPrefixes();
+            _ui.SetInteractable(true);
+
+            var state = _ui.OfflineMode ? "offline" : "online";
+            _log.Info($"Is {state} now!");
+            
+            if (!_profiles.Contains(_settings.Profile) && _versions.Prefixes.Count > 0) {
+                var defaultPrefix = _versions.Prefixes[0];
+                _settings.Profile = !_profiles.IsEmpty ? _profiles.Names[0] : _profiles.CreateDefault(defaultPrefix);
+                _log.Info($"Created default profile : '{_settings.Profile}'");
+                
+                _ui.SetProfiles(_profiles.Names, _settings.Profile);
+            }
+            
+            if (_ui.OfflineMode)
+                _ui.ShowErrorMessage("offline_mode_enabled");
+        }
+
+        private async Task<bool> TryFetchPrefixes() {
+            try {
+                await _versions.FetchPrefixes();
+            }
+            catch {
+                return false;
+            }
+
+            return true;
+        } 
+
         private void LoadWindowSettings() {
             if (!_profiles.IsEmpty) {
                 _ui.SetProfiles(_profiles.Names, _settings.Profile);
@@ -88,7 +119,6 @@ namespace TtyhLauncher {
             _ui.Password = _settings.Password;
             
             _ui.SavePassword = _settings.SavePassword;
-            _ui.OfflineMode = _settings.OfflineMode;
             _ui.HideOnRun = _settings.HideOnRun;
             
             _ui.Resize(_settings.WindowWidth, _settings.WindowHeight);
@@ -100,7 +130,6 @@ namespace TtyhLauncher {
             _settings.Password = _ui.SavePassword ? _ui.Password : string.Empty;
             
             _settings.SavePassword = _ui.SavePassword;
-            _settings.OfflineMode = _ui.OfflineMode;
             _settings.HideOnRun = _ui.HideOnRun;
 
             _ui.GetSize(out var w, out var h);
