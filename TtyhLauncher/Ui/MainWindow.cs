@@ -37,6 +37,7 @@ namespace TtyhLauncher.Ui {
         [FormItem] private readonly ScrolledWindow _scroll = null;
         [FormItem] private readonly Grid _form = null;
 
+        public event Action OnExit;
         public event Action OnPlayButtonClicked;
         public event Action OnTaskCancelClicked;
         public event Action<bool> OnOfflineModeToggle;
@@ -74,7 +75,8 @@ namespace TtyhLauncher.Ui {
         
         public MainWindow(string title) : this(new Builder("MainWindow.glade")) {
             Title = title;
-            _logBuffer = _logTextView.Buffer;
+
+            DeleteEvent += (s, a) => { OnExit?.Invoke(); Application.Quit(); };
             
             // Because of the GTK is a piece of shit the `Monospace` property doesn't work for a TextView
             // So, lets use deprecated API
@@ -82,6 +84,7 @@ namespace TtyhLauncher.Ui {
             _logTextView.OverrideFont(new FontDescription {Family = "Monospace"});
 #pragma warning restore 612
 
+            _logBuffer = _logTextView.Buffer;
             _logTextView.SizeAllocated += (s, a) => {
                 var adj = _scroll.Vadjustment;
                 adj.Value = adj.Upper - adj.PageSize;
@@ -89,7 +92,7 @@ namespace TtyhLauncher.Ui {
             
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
             _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
-            _actToggleOffline.Toggled += (s, a) => OnOfflineModeToggle?.Invoke(_actToggleOffline.Active);;
+            _actToggleOffline.Toggled += (s, a) => OnOfflineModeToggle?.Invoke(_actToggleOffline.Active);
         }
 
         public void SetInteractable(bool interactable) {

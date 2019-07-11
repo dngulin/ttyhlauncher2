@@ -45,7 +45,7 @@ namespace TtyhLauncher {
             
             _log = new WrappedLogger(logger, name);
 
-            _ui.DeleteEvent += (sender, args) => HandleMainWindowClose();
+            _ui.OnExit += HandleExit;
             _ui.OnPlayButtonClicked += HandlePlayButtonClicked;
             _ui.OnOfflineModeToggle += HandleOfflineModeToggle;
         }
@@ -59,13 +59,12 @@ namespace TtyhLauncher {
             TryBecomeOnline();
         }
 
-        private void HandleMainWindowClose() {
+        private void HandleExit() {
             _log.Info("Terminating...");
-            _logger.OnLog -= _ui.AppendLog;
-
-            SaveWindowSettings();
             
-            Gtk.Application.Quit();
+            _logger.OnLog -= _ui.AppendLog;
+            
+            SaveWindowSettings();
         }
 
         private void HandleOfflineModeToggle(bool offline) {
