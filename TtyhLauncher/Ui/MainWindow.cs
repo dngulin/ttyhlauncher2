@@ -6,7 +6,7 @@ using Action = System.Action;
 using FormItem = Gtk.Builder.ObjectAttribute;
 
 namespace TtyhLauncher.Ui {
-    public class MainWindow: ApplicationWindow {
+    public class MainWindow: ApplicationWindow, ILauncherUi {
         private const int MaxLogLines = 256;
         
         [FormItem] private readonly CheckMenuItem _actToggleOffline = null;
@@ -94,6 +94,18 @@ namespace TtyhLauncher.Ui {
             _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
             _actToggleOffline.Toggled += (s, a) => OnOfflineModeToggle?.Invoke(_actToggleOffline.Active);
         }
+        
+        public void SetWindowVisible(bool isVisible) {
+            if (isVisible) {
+                ShowAll();
+            }
+            else {
+                Hide();
+            }
+        }
+
+        public void SetWindowSize(int w, int h) => Resize(w, h);
+        public void GetWindowSize(out int w, out int h) => GetSize(out w, out h);
 
         public void SetInteractable(bool interactable) {
             _menu.Sensitive = interactable;

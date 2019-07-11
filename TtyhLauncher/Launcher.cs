@@ -24,12 +24,12 @@ namespace TtyhLauncher {
         private readonly HashChecker _hashChecker;
         private readonly Downloader _downloader;
         
-        private readonly MainWindow _ui;
+        private readonly ILauncherUi _ui;
         private readonly ILogger _logger;
         private readonly WrappedLogger _log;
 
         public Launcher(SettingsManager settings, VersionsManager versions, ProfilesManager profiles,
-            HttpClient httpClient, TtyhClient ttyhClient, MainWindow ui, ILogger logger, string name) {
+            HttpClient httpClient, TtyhClient ttyhClient, ILauncherUi ui, ILogger logger, string name) {
             _settings = settings;
             _versions = versions;
             _profiles = profiles;
@@ -54,8 +54,7 @@ namespace TtyhLauncher {
             _log.Info("Starting...");
 
             LoadWindowSettings();
-            _ui.ShowAll();
-            
+            _ui.SetWindowVisible(true);
             TryBecomeOnline();
         }
 
@@ -120,7 +119,7 @@ namespace TtyhLauncher {
             _ui.SavePassword = _settings.SavePassword;
             _ui.HideOnRun = _settings.HideOnRun;
             
-            _ui.Resize(_settings.WindowWidth, _settings.WindowHeight);
+            _ui.SetWindowSize(_settings.WindowWidth, _settings.WindowHeight);
         }
 
         private void SaveWindowSettings() {
@@ -131,7 +130,7 @@ namespace TtyhLauncher {
             _settings.SavePassword = _ui.SavePassword;
             _settings.HideOnRun = _ui.HideOnRun;
 
-            _ui.GetSize(out var w, out var h);
+            _ui.GetWindowSize(out var w, out var h);
             _settings.WindowWidth = w;
             _settings.WindowHeight = h;
         }
@@ -257,7 +256,7 @@ namespace TtyhLauncher {
 
         private async Task Run(string profileId, LoginResultData tokens = null) {
             if (_ui.HideOnRun)
-                _ui.Hide();
+                _ui.SetWindowVisible(false);
 
             try {
                 if (tokens == null) {
@@ -272,7 +271,7 @@ namespace TtyhLauncher {
             }
 
             if (_ui.HideOnRun)
-                _ui.ShowAll();
+                _ui.SetWindowVisible(true);
         }
     }
 }
