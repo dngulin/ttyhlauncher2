@@ -1,11 +1,12 @@
 using System;
 using Gtk;
 using Pango;
+using TtyhLauncher.Ui;
 using TtyhLauncher.Utils.Data;
 using Action = System.Action;
 using FormItem = Gtk.Builder.ObjectAttribute;
 
-namespace TtyhLauncher.Ui {
+namespace TtyhLauncher.GTK {
     public class MainWindow: ApplicationWindow, ILauncherUi {
         private const int MaxLogLines = 256;
         

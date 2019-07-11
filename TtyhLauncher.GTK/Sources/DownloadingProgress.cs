@@ -3,7 +3,7 @@ using System.IO;
 using Gtk;
 using TtyhLauncher.Utils.Data;
 
-namespace TtyhLauncher.Ui {
+namespace TtyhLauncher.GTK {
     public class DownloadingProgress : IProgress<DownloadingState> {
         private readonly ProgressBar _bar;
         
