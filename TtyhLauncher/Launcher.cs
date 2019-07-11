@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Master;
@@ -50,7 +52,6 @@ namespace TtyhLauncher {
 
         public async void Start() {
             _log.Info("Starting...");
-            LoadWindowSettings();
 
             try {
                 await _versions.FetchPrefixes();
@@ -59,12 +60,13 @@ namespace TtyhLauncher {
                 // Ask for offline mode?
             }
             
-            if (!_profiles.IsEmpty && _versions.Prefixes.Count > 0) {
+            if (!_profiles.Contains(_settings.Profile) && !_profiles.IsEmpty && _versions.Prefixes.Count > 0) {
                 var defaultPrefix = _versions.Prefixes[0];
                 _settings.Profile = !_profiles.IsEmpty ? _profiles.Names[0] : _profiles.CreateDefault(defaultPrefix);
                 _log.Info($"Created default profile : '{_settings.Profile}'");
             }
 
+            LoadWindowSettings();
             _ui.ShowAll();
         }
 
@@ -112,11 +114,11 @@ namespace TtyhLauncher {
                 return;
             }
 
-            _ui.Sensitive = false;
+            _ui.SetInteractable(false);
             
             await CheckAndRun();
             
-            _ui.Sensitive = true;
+            _ui.SetInteractable(true);
         }
 
         private async Task CheckAndRun() {
@@ -161,27 +163,65 @@ namespace TtyhLauncher {
                 _ui.ShowErrorMessage("cant_update_version_indexes");
                 return false;
             }
+
+            DownloadTarget[] fileList;
+            try {
+                fileList = _versions.GetVersionFilesInfo(profile.FullVersion);
+            }
+            catch {
+                _ui.ShowErrorMessage("corrupted_version_indexes");
+                return false;
+            }
+            
+            var checkingCts = new CancellationTokenSource();
+            var checkingListener = _ui.ShowCheckingTask();
+            _ui.OnTaskCancelClicked += checkingCts.Cancel;
             
             DownloadTarget[] downloads;
             try {
-                var fileList = _versions.GetVersionFilesInfo(profile.FullVersion);
-                downloads = await _hashChecker.CheckFiles(fileList);
+                downloads = await _hashChecker.CheckFiles(fileList, checkingCts.Token, checkingListener);
             }
-            catch {
-                _ui.ShowErrorMessage("cant_check_version_files");
+            catch (OperationCanceledException) {
                 return false;
             }
+            catch (Exception e){
+                _ui.ShowErrorMessage("cant_check_version " + e.Message);
+                return false;
+            }
+            finally {
+                _ui.HideTask();
+                _ui.OnTaskCancelClicked -= checkingCts.Cancel;
+            }
 
+            return await AskForDownloads(downloads);
+        }
+
+        private async Task<bool> AskForDownloads(DownloadTarget[] downloads) {
             if (downloads.Length <= 0) {
                 return true;
             }
+            
+            if (!_ui.AskForDownloads(downloads.Length, downloads.Sum(d => d.Size))) {
+                return false;
+            }
+
+            var cts = new CancellationTokenSource();
+            var progressListener = _ui.ShowDownloadingTask();
+            _ui.OnTaskCancelClicked += cts.Cancel;
 
             try {
-                await _downloader.Download(downloads);
+                await _downloader.Download(downloads, cts.Token, progressListener);
+            }
+            catch (OperationCanceledException) {
+                return false;
             }
             catch {
                 _ui.ShowErrorMessage("cant_download_version");
                 return false;
+            }
+            finally {
+                _ui.HideTask();
+                _ui.OnTaskCancelClicked -= cts.Cancel;
             }
 
             return true;

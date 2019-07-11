@@ -1,6 +1,7 @@
 using System;
 using Gtk;
 using Pango;
+using TtyhLauncher.Utils.Data;
 using Action = System.Action;
 using FormItem = Gtk.Builder.ObjectAttribute;
 
@@ -23,10 +24,21 @@ namespace TtyhLauncher.Ui {
         [FormItem] private readonly ComboBoxText _comboProfiles = null;
         [FormItem] private readonly Entry _entryPlayer = null;
         [FormItem] private readonly Entry _entryPassword = null;
-        
         [FormItem] private readonly Button _buttonPlay = null;
+        
+        [FormItem] private readonly Stack _stackTask = null;
+        [FormItem] private readonly Label _labelTaskNothing = null;
+        [FormItem] private readonly Box _boxTask = null;
+        [FormItem] private readonly Label _labelTask = null;
+        [FormItem] private readonly ProgressBar _pbTask = null;
+        [FormItem] private readonly Button _buttonTaskCancel = null;
+        
+        [FormItem] private readonly MenuBar _menu = null;
+        [FormItem] private readonly ScrolledWindow _scroll = null;
+        [FormItem] private readonly Grid _form = null;
 
         public event Action OnPlayButtonClicked;
+        public event Action OnTaskCancelClicked;
         
         public bool OfflineMode {
             get => _actToggleOffline.Active;
@@ -71,6 +83,13 @@ namespace TtyhLauncher.Ui {
 
             _logTextView.SizeAllocated += (s, a) => _logTextView.ScrollToIter(_logBuffer.EndIter, 0, false, 0, 0);
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
+            _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
+        }
+
+        public void SetInteractable(bool interactable) {
+            _menu.Sensitive = interactable;
+            _scroll.Sensitive = interactable;
+            _form.Sensitive = interactable;
         }
 
         public void SetProfiles(string[] names, string selected) {
@@ -98,6 +117,61 @@ namespace TtyhLauncher.Ui {
             dialog.Title = "Error";
             dialog.Run();
             dialog.Destroy();
+        }
+
+        public bool AskForDownloads(int filesCount, long totalSize) {
+            var size = GetHumanReadableSize(totalSize);
+            var msg = $"Need to download {filesCount} files with the total size {size}.";
+            
+            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Question, ButtonsType.OkCancel, msg);
+            dialog.Title = "Downloads required";
+            
+            var result = (ResponseType) dialog.Run();
+            dialog.Destroy();
+
+            return result == ResponseType.Ok;
+        }
+
+        private static string GetHumanReadableSize(long size) {
+            const long gb = 1024 * 1024 * 1024;
+            const long mb = 1024 * 1024;
+            const long kb = 1024;
+            
+            if (size > gb)
+                return $"{(float) size / gb:F2} GiB";
+            
+            if (size > mb)
+                return $"{(float) size / mb:F2} MiB";
+            
+            if (size > kb)
+                return $"{(float) size / kb:F2} KiB";
+
+            return $"{size} B";
+        }
+
+        public IProgress<DownloadingState> ShowDownloadingTask() {
+            _labelTask.Text = "Downloading files";
+            ShowTask();
+            return new DownloadingProgress(_pbTask);
+        }
+        
+        public IProgress<CheckingState> ShowCheckingTask() {
+            _labelTask.Text = "Checking files";
+            ShowTask();
+            return new CheckingProgress(_pbTask);
+        }
+
+        private void ShowTask() {
+            _pbTask.Text = "";
+            _pbTask.Fraction = 0;
+            
+            _buttonTaskCancel.Sensitive = true;
+            _stackTask.VisibleChild = _boxTask;
+        }
+
+        public void HideTask() {
+            _buttonTaskCancel.Sensitive = false;
+            _stackTask.VisibleChild = _labelTaskNothing;
         }
     }
 }

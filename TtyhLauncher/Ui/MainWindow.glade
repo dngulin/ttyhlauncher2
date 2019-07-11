@@ -20,7 +20,7 @@
         <property name="orientation">vertical</property>
         <property name="spacing">4</property>
         <child>
-          <object class="GtkMenuBar">
+          <object class="GtkMenuBar" id="_menu">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -126,7 +126,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkScrolledWindow" id="_scroll">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">never</property>
@@ -153,7 +153,102 @@
           </packing>
         </child>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkStack" id="_stackTask">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hhomogeneous">False</property>
+            <property name="vhomogeneous">False</property>
+            <property name="transition_type">crossfade</property>
+            <property name="interpolate_size">True</property>
+            <child>
+              <object class="GtkLabel" id="_labelTaskNothing">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">There are no active tasks...</property>
+                <attributes>
+                  <attribute name="style" value="oblique"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="name">page1</property>
+                <property name="title" translatable="yes">page1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="_boxTask">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">4</property>
+                <property name="margin_right">4</property>
+                <property name="margin_top">4</property>
+                <property name="margin_bottom">4</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel" id="_labelTask">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Downloading</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="_pbTask">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="fraction">0.41999999999999998</property>
+                    <property name="show_text">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="_buttonTaskCancel">
+                    <property name="label" translatable="yes">Cancel</property>
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="name">task</property>
+                <property name="title" translatable="yes">task</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkGrid" id="_form">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
@@ -292,7 +387,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
