@@ -82,7 +82,10 @@ namespace TtyhLauncher.Ui {
             _logTextView.OverrideFont(new FontDescription {Family = "Monospace"});
 #pragma warning restore 612
 
-            _logTextView.SizeAllocated += (s, a) => _logTextView.ScrollToIter(_logBuffer.EndIter, 0, false, 0, 0);
+            _logTextView.SizeAllocated += (s, a) => {
+                var adj = _scroll.Vadjustment;
+                adj.Value = adj.Upper - adj.PageSize;
+            };
             
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
             _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
