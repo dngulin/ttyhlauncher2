@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Master.Data;
+using TtyhLauncher.Master.Exceptions;
 using TtyhLauncher.Utils;
 
 namespace TtyhLauncher.Master {
@@ -55,19 +56,25 @@ namespace TtyhLauncher.Master {
             };
             
             _log.Info($"Logging as {userName}...");
+            LoginResultData reply;
             try {
-                var reply = await PostJson<LoginResultData>(url, payload);
-                
-                _log.Info($"{reply.AccessToken}, {reply.ClientToken}");
-                return reply;
+                reply = await PostJson<LoginResultData>(url, payload);
             }
             catch (Exception e) {
                 _log.Error(e.Message);
                 throw;
             }
+            
+            if (reply.Error != null) {
+                _log.Error($"Error response: '{reply.Error}'");
+                throw new ErrorAnswerException(reply.Error);
+            }
+                
+            _log.Info($"at: '{reply.AccessToken}', ct: '{reply.ClientToken}'");
+            return reply;
         }
 
-        public async Task<bool> UploadSkin(string userName, string password, byte[] skinData, bool isSlim) {
+        public async Task UploadSkin(string userName, string password, byte[] skinData, bool isSlim) {
             var url = string.Format(RequestPattern, _masterUrl, UploadSkinAction);
             var payload = new SkinUploadRequestData {
                 UserName = userName,
@@ -77,18 +84,18 @@ namespace TtyhLauncher.Master {
             };
             
             _log.Info("Uploading skin...");
+            ResultData reply;
             try {
-                var reply = await PostJson<ResultData>(url, payload);
-                var success = reply.Error == null;
-
-                if (success) _log.Info("OK");
-                else _log.Error(reply.Error);
-
-                return success;
+                reply = await PostJson<ResultData>(url, payload);
             }
             catch (Exception e) {
                 _log.Error(e.Message);
                 throw;
+            }
+            
+            if (reply.Error != null) {
+                _log.Error($"Error response: '{reply.Error}'");
+                throw new ErrorAnswerException(reply.Error);
             }
         }
 
@@ -110,8 +117,6 @@ namespace TtyhLauncher.Master {
                 request.Content = httpContent;
                 
                 using (var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)) {
-                    response.EnsureSuccessStatusCode();
-                    
                     using (var respStream = await response.Content.ReadAsStreamAsync())
                     using (var textReader = new StreamReader(respStream))
                     using (var jsonReader = new JsonTextReader(textReader)) {
