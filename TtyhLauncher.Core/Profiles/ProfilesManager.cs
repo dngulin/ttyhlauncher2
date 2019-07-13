@@ -12,6 +12,7 @@ using TtyhLauncher.Json.Minecraft;
 using TtyhLauncher.Json.Ttyh;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Profiles.Data;
+using TtyhLauncher.Profiles.Exceptions;
 using TtyhLauncher.Utils;
 using TtyhLauncher.Versions.Data;
 
@@ -105,35 +106,97 @@ namespace TtyhLauncher.Profiles {
             var fullVersion = new FullVersionId(prefixInfo.Id, prefixInfo.LatestVersion);
             var prefixId = $"{prefixInfo.About} {fullVersion.Version}";
             
-            Create(prefixId, fullVersion);
-            
+            Create(prefixId, new ProfileData {FullVersion = fullVersion});
             return prefixId;
         }
 
-        public void Create(string profileId, FullVersionId fullVersion) {
-            if (_profiles.ContainsKey(profileId))
-                return;
+        public void Create(string profileId, ProfileData profileData) {
+            _log.Info($"Create new profile {profileId}");
+            
+            if (_profiles.ContainsKey(profileId)) {
+                _log.Error($"Profile with name '{profileId}' already exists in cache!");
+                throw new InvalidProfileNameException();
+            }
+            
+            if (!ValidateProfileId(profileId)) {
+                _log.Error("Invalid profile id!");
+                throw new InvalidProfileNameException();
+            }
+
+            if (!ValidateVersion(profileData.FullVersion)) {
+                _log.Error($"Cant create profile {profileId}. Invalid version!");
+                throw new InvalidProfileVersionException();
+            }
             
             var profileDir = Path.Combine(_profilesPath, profileId);
             if (!Directory.Exists(profileDir))
                 Directory.CreateDirectory(profileDir);
-
-            var profilePath = Path.Combine(profileDir, ProfileIndexName);
-            var profileData = new ProfileData {FullVersion = fullVersion};
-            _json.WriteFile(profileData, profilePath);
             
-            _profiles.Add(profileId, profileData);
+            _json.WriteFile(profileData, Path.Combine(profileDir, ProfileIndexName));
+            _profiles.Add(profileId, profileData.Clone());
 
-            InternalUpdate(profileDir, fullVersion);
+            InstallFiles(profileDir, profileData.FullVersion);
         }
 
-        public void Update(string profileId) {
+        public void Rename(string oldId, string newId) {
+            _log.Info($"Rename '{oldId}' -> '{newId}'");
+            if (!_profiles.ContainsKey(oldId)) {
+                _log.Error($"Profile with name '{oldId}' does not exist in cache!");
+                throw new InvalidProfileNameException();
+            }
+
+            if (_profiles.ContainsKey(newId)) {
+                _log.Error($"Profile with name '{newId}' already exists in cache!");
+                throw new InvalidProfileNameException();
+            }
+
+            if (!ValidateProfileId(newId)) {
+                _log.Error("Invalid new profile id!");
+                throw new InvalidProfileNameException();
+            }
+            
+            Directory.Move(Path.Combine(_profilesPath, oldId), Path.Combine(_profilesPath, newId));
+
+            _profiles[newId] = _profiles[oldId];
+            _profiles.Remove(oldId);
+        }
+
+        public void UpdateData(string profileId, ProfileData profileData) {
+            _log.Info($"Update profile {profileId}");
+            
+            if (!_profiles.ContainsKey(profileId)) {
+                _log.Error($"Profile with name '{profileId}' does not exist in cache!");
+                throw new InvalidProfileNameException();
+            }
+            
+            _json.WriteFile(profileData, Path.Combine(_profilesPath, profileId, ProfileIndexName));
+            _profiles[profileId] = profileData.Clone();
+        }
+
+        private static bool ValidateVersion(FullVersionId version) {
+            return version.Prefix != null && version.Version != null;
+        }
+
+        private static bool ValidateProfileId(string id) {
+            if (string.IsNullOrEmpty(id))
+                return false;
+
+            if (id.Trim() == string.Empty)
+                return false;
+
+            var allowed = new[] {' ', '-', '_', '.', ',', '!', '?'};
+
+            return id.All(ch => char.IsLetterOrDigit(ch) || allowed.Contains(ch));
+        }
+
+
+        public void UpdateInstalledFiles(string profileId) {
             var profileDir = Path.Combine(_profilesPath, profileId);
             var versionId = _profiles[profileId].FullVersion;
-            InternalUpdate(profileDir, versionId);
+            InstallFiles(profileDir, versionId);
         }
 
-        private void InternalUpdate(string profileDir, FullVersionId versionId) {
+        private void InstallFiles(string profileDir, FullVersionId versionId) {
             var filesIndexPath = Path.Combine(profileDir, FilesIndexName);
             var dataIndexPath = Path.Combine(_versionsPath, versionId.Prefix, versionId.Version, DataIndexName);
 

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Utils.Data;
+using TtyhLauncher.Versions.Data;
 
 namespace TtyhLauncher.Ui {
     public interface ILauncherUi {
@@ -8,6 +11,9 @@ namespace TtyhLauncher.Ui {
         event Action OnTaskCancelClicked;
         event Action<bool> OnOfflineModeToggle;
         
+        event Action OnAddProfileClicked;
+        event Action OnEditProfileClicked;
+
         bool OfflineMode { get; set; }
         bool SavePassword { get; set; }
         bool HideOnRun { get; set; }
@@ -29,5 +35,7 @@ namespace TtyhLauncher.Ui {
         IProgress<DownloadingState> ShowDownloadingTask();
         IProgress<CheckingState> ShowCheckingTask();
         void HideTask();
+
+        void ShowProfile(string id, ProfileData profile, IReadOnlyList<CachedPrefixInfo> prefixes, Action<string, ProfileData> doSave);
     }
 }

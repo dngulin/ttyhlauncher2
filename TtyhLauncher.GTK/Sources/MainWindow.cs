@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Gtk;
 using Pango;
+using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Ui;
 using TtyhLauncher.Utils.Data;
+using TtyhLauncher.Versions.Data;
 using Action = System.Action;
 using FormItem = Gtk.Builder.ObjectAttribute;
 
@@ -15,9 +18,11 @@ namespace TtyhLauncher.GTK {
         [FormItem] private readonly CheckMenuItem _actToggleHideWindow = null;
         
         [FormItem] private readonly MenuItem _actUploadSkin = null;
-        [FormItem] private readonly MenuItem _actManageProfiles = null;
-        
+
         [FormItem] private readonly MenuItem _actAbout = null;
+        
+        [FormItem] private readonly MenuItem _actEditProfile = null;
+        [FormItem] private readonly MenuItem _actAddProfile = null;
         
         [FormItem] private readonly TextView _logTextView = null;
         private readonly TextBuffer _logBuffer;
@@ -43,6 +48,10 @@ namespace TtyhLauncher.GTK {
         public event Action OnTaskCancelClicked;
         public event Action<bool> OnOfflineModeToggle;
         
+        public event Action OnAddProfileClicked;
+        public event Action OnEditProfileClicked;
+        public event Action<ProfileData, string> OnTrySaveProfile;
+
         public bool OfflineMode {
             get => _actToggleOffline.Active;
             set => _actToggleOffline.Active = value;
@@ -94,6 +103,9 @@ namespace TtyhLauncher.GTK {
             _buttonPlay.Clicked += (s, a) => OnPlayButtonClicked?.Invoke();
             _buttonTaskCancel.Clicked += (s, a) => OnTaskCancelClicked?.Invoke();
             _actToggleOffline.Toggled += (s, a) => OnOfflineModeToggle?.Invoke(_actToggleOffline.Active);
+
+            _actAddProfile.Activated += (s, a) => OnAddProfileClicked?.Invoke();
+            _actEditProfile.Activated += (s, a) => OnEditProfileClicked?.Invoke();
         }
         
         public void SetWindowVisible(bool isVisible) {
@@ -194,6 +206,11 @@ namespace TtyhLauncher.GTK {
         public void HideTask() {
             _buttonTaskCancel.Sensitive = false;
             _stackTask.VisibleChild = _labelTaskNothing;
+        }
+
+        public void ShowProfile(string id, ProfileData profile, IReadOnlyList<CachedPrefixInfo> prefixes, Action<string, ProfileData> doSave) {
+            var window = new ProfileWindow(id, profile, prefixes, doSave) {TransientFor = this};
+            window.ShowAll();
         }
     }
 }

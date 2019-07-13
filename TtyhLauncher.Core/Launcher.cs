@@ -13,6 +13,7 @@ using TtyhLauncher.Ui;
 using TtyhLauncher.Utils;
 using TtyhLauncher.Utils.Data;
 using TtyhLauncher.Versions;
+using TtyhLauncher.Versions.Data;
 
 namespace TtyhLauncher {
     public class Launcher {
@@ -48,6 +49,9 @@ namespace TtyhLauncher {
             _ui.OnExit += HandleExit;
             _ui.OnPlayButtonClicked += HandlePlayButtonClicked;
             _ui.OnOfflineModeToggle += HandleOfflineModeToggle;
+            
+            _ui.OnEditProfileClicked += HandleEditProfile;
+            _ui.OnAddProfileClicked += HandleAddProfile;
         }
 
         public void Start() {
@@ -106,7 +110,42 @@ namespace TtyhLauncher {
             }
 
             return true;
-        } 
+        }
+        
+        private void HandleEditProfile() {
+            var id = _ui.SelectedProfile;
+            var data = _profiles.GetProfileData(id);
+            _ui.ShowProfile(id, data, _versions.Prefixes, (newId, newData) => TryUpdateProfile(id, newId, newData));
+        }
+
+        private void TryUpdateProfile(string oldId, string newId, ProfileData data) {
+            if (oldId != newId) {
+                _profiles.Rename(oldId, newId);
+                _ui.SetProfiles(_profiles.Names, newId);
+            }
+            
+            _profiles.UpdateData(newId, data);
+        }
+        
+        private void HandleAddProfile() {
+            if (_versions.Prefixes.Count <= 0) {
+                _ui.ShowErrorMessage("no_versions_available");
+                return;
+            }
+
+            var prefix = _versions.Prefixes[0];
+            var version = new FullVersionId(prefix.Id, prefix.LatestVersion);
+            var data = new ProfileData {
+                FullVersion = version
+            };
+            
+            _ui.ShowProfile("New profile", data, _versions.Prefixes, TryCreateProfile);
+        }
+
+        private void TryCreateProfile(string id, ProfileData data) {
+            _profiles.Create(id, data);
+            _ui.SetProfiles(_profiles.Names, id);
+        }
 
         private void LoadWindowSettings() {
             if (!_profiles.IsEmpty) {
@@ -163,7 +202,7 @@ namespace TtyhLauncher {
             }
             
             try {
-                _profiles.Update(profileId);
+                _profiles.UpdateInstalledFiles(profileId);
             }
             catch {
                 _ui.ShowErrorMessage("cant_sync_profile");

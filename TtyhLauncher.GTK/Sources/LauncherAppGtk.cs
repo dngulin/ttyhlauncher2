@@ -6,13 +6,16 @@ namespace TtyhLauncher.GTK {
     public class LauncherAppGtk : LauncherApp {
         private readonly string _appId;
 
+        private MainWindow _ui;
+
         public LauncherAppGtk(string appId) {
             _appId = appId;
             Application.Init();
             GLib.ExceptionManager.UnhandledException += args => {
                 var msg = (args.ExceptionObject as Exception)?.Message ?? "UNKNOWN_ERROR";
-                var dialog = new MessageDialog(null, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, msg);
-                dialog.Title = "Unhandled Exception";
+                var dialog = new MessageDialog(_ui, DialogFlags.Modal, MessageType.Error, ButtonsType.Ok, msg);
+                dialog.Title = $"Unhandled Exception ({args.ExceptionObject.GetType()})";
+                dialog.SecondaryText = (args.ExceptionObject as Exception)?.StackTrace ?? "UNKNOWN_STACK";
                     
                 dialog.Run();
                 dialog.Destroy();
@@ -28,6 +31,7 @@ namespace TtyhLauncher.GTK {
             gtkApplication.Register(GLib.Cancellable.Current);
             gtkApplication.AddWindow(ui);
 
+            _ui = ui;
             return ui;
         }
 
