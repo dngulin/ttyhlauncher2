@@ -134,8 +134,6 @@ namespace TtyhLauncher.Profiles {
             
             _json.WriteFile(profileData, Path.Combine(profileDir, ProfileIndexName));
             _profiles.Add(profileId, profileData.Clone());
-
-            InstallFiles(profileDir, profileData.FullVersion);
         }
 
         public void Rename(string oldId, string newId) {
