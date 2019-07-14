@@ -222,7 +222,7 @@ namespace TtyhLauncher {
                 
             var profile = _profiles.GetProfileData(profileId);
                 
-            if (profile.CheckVersionOnRun && !await CheckProfile(profile)) {
+            if (profile.CheckVersionFiles && !await CheckProfile(profile)) {
                 return;
             }
             

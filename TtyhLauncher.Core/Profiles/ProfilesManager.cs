@@ -82,7 +82,7 @@ namespace TtyhLauncher.Profiles {
         public ProfileData GetProfileData(string id) => _profiles[id].Clone();
 
         public void Create(string profileId, ProfileData profileData) {
-            _log.Info($"Create new profile {profileId}");
+            _log.Info($"Create new profile '{profileId}'");
             
             if (_profiles.ContainsKey(profileId)) {
                 _log.Error($"Profile with name '{profileId}' already exists in cache!");

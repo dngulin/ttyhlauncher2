@@ -13,8 +13,9 @@ namespace TtyhLauncher.GTK {
         private readonly Action<string, ProfileData> _doSave;
         
         [FormItem] private readonly Entry _entryName = null;
-        [FormItem] private readonly ComboBoxText _cbPrefixes = null;
-        [FormItem] private readonly ComboBoxText _cbVersions = null;
+        [FormItem] private readonly ComboBoxText _comboPrefixes = null;
+        [FormItem] private readonly ComboBoxText _comboVersions = null;
+        [FormItem] private readonly CheckButton _toggleCheckVersion = null;
         
         [FormItem] private readonly Button _buttonSave = null;
 
@@ -35,38 +36,39 @@ namespace TtyhLauncher.GTK {
             _entryName.Text = profileId;
             
             foreach (var prefixName in prefixes.Select(p => p.About))
-                _cbPrefixes.AppendText(prefixName);
+                _comboPrefixes.AppendText(prefixName);
             
+            _toggleCheckVersion.Active = profileData.CheckVersionFiles;
             
-            _cbPrefixes.Changed += UpdateVersionsCombo;
+            _comboPrefixes.Changed += UpdateVersionsCombo;
             _buttonSave.Clicked += OnSaveClicked;
             
             var index = prefixes.ToList().FindIndex(p => p.Id == profileData.FullVersion.Prefix);
             if (index < 0 || index >= _prefixes.Count)
                 return;
-            
+
             var versions = _prefixes[index].Versions.Select(v => v.Id).ToArray();
             
-            _cbPrefixes.Active = index;
-            _cbVersions.Active = Array.IndexOf(versions, profileData.FullVersion.Version);
+            _comboPrefixes.Active = index;
+            _comboVersions.Active = Array.IndexOf(versions, profileData.FullVersion.Version);
         }
 
         private void UpdateVersionsCombo(object sender, EventArgs e) {
-            _cbVersions.RemoveAll();
+            _comboVersions.RemoveAll();
             
-            var index = _cbPrefixes.Active;
+            var index = _comboPrefixes.Active;
             if (index < 0 || index >= _prefixes.Count)
                 return;
 
             var versions = _prefixes[index].Versions.Select(v => v.Id).ToArray();
             foreach (var version in versions)
-                _cbVersions.AppendText(version);
+                _comboVersions.AppendText(version);
             
-            _cbVersions.Active = Array.IndexOf(versions, _prefixes[index].LatestVersion);
+            _comboVersions.Active = Array.IndexOf(versions, _prefixes[index].LatestVersion);
         }
 
         void OnSaveClicked(object sender, EventArgs e) {
-            var index = _cbPrefixes.Active;
+            var index = _comboPrefixes.Active;
             if (index < 0 || index >= _prefixes.Count) {
                 ShowError("wrong_version");
                 return;
@@ -74,8 +76,8 @@ namespace TtyhLauncher.GTK {
 
             var profileId = _entryName.Text;
             var profileData = new ProfileData {
-                FullVersion = new FullVersionId(_prefixes[index].Id, _cbVersions.ActiveText),
-                CheckVersionOnRun = true
+                FullVersion = new FullVersionId(_prefixes[index].Id, _comboVersions.ActiveText),
+                CheckVersionFiles = _toggleCheckVersion.Active
             };
 
             _buttonSave.Sensitive = false;
