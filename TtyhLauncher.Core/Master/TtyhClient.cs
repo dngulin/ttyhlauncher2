@@ -66,8 +66,8 @@ namespace TtyhLauncher.Master {
             }
             
             if (reply.Error != null) {
-                _log.Error($"Error response: '{reply.Error}'");
-                throw new ErrorAnswerException(reply.Error);
+                _log.Error($"{reply.Error} '{reply.ErrorMessage}'");
+                throw new ErrorAnswerException(reply.ErrorMessage ?? reply.Error);
             }
                 
             _log.Info($"at: '{reply.AccessToken}', ct: '{reply.ClientToken}'");
@@ -94,8 +94,8 @@ namespace TtyhLauncher.Master {
             }
             
             if (reply.Error != null) {
-                _log.Error($"Error response: '{reply.Error}'");
-                throw new ErrorAnswerException(reply.Error);
+                _log.Error($"{reply.Error} '{reply.ErrorMessage}'");
+                throw new ErrorAnswerException(reply.ErrorMessage ?? reply.Error);
             }
         }
 
