@@ -5,7 +5,12 @@ using TtyhLauncher.Json.Ttyh;
 namespace TtyhLauncher.Versions.Data {
     public class CachedVersionInfo : IComparable<CachedVersionInfo>, IComparable {
         public string Id { get; }
-        public DateTimeOffset ReleaseTime { get; }
+        private DateTimeOffset ReleaseTime { get; }
+        
+        public CachedVersionInfo(string id) {
+            Id = id;
+            ReleaseTime = DateTimeOffset.MaxValue;
+        }
 
         public CachedVersionInfo(PrefixVersionsIndex.VersionEntry versionEntry) {
             Id = versionEntry.Id;
@@ -21,7 +26,7 @@ namespace TtyhLauncher.Versions.Data {
             if (ReferenceEquals(this, other)) return 0;
             if (ReferenceEquals(null, other)) return 1;
             
-            return ReleaseTime.CompareTo(other.ReleaseTime);
+            return other.ReleaseTime.CompareTo(ReleaseTime);
         }
 
         public int CompareTo(object obj) {

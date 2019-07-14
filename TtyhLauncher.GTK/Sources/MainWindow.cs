@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Gtk;
 using Pango;
 using TtyhLauncher.Profiles.Data;
@@ -50,7 +49,6 @@ namespace TtyhLauncher.GTK {
         
         public event Action OnAddProfileClicked;
         public event Action OnEditProfileClicked;
-        public event Action<ProfileData, string> OnTrySaveProfile;
 
         public bool OfflineMode {
             get => _actToggleOffline.Active;
@@ -210,7 +208,7 @@ namespace TtyhLauncher.GTK {
             _stackTask.VisibleChild = _labelTaskNothing;
         }
 
-        public void ShowProfile(string id, ProfileData profile, IReadOnlyList<CachedPrefixInfo> prefixes, Action<string, ProfileData> doSave) {
+        public void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> doSave) {
             var window = new ProfileWindow(id, profile, prefixes, doSave) {TransientFor = this};
             window.ShowAll();
         }

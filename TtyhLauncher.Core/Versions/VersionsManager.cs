@@ -33,8 +33,7 @@ namespace TtyhLauncher.Versions {
         private readonly HttpClient _client;
         private readonly JsonParser _json;
 
-        private CachedPrefixInfo[] _prefixes;
-        public IReadOnlyList<CachedPrefixInfo> Prefixes => _prefixes;
+        public CachedPrefixInfo[] Prefixes { get; private set; }
 
         public VersionsManager(string storeUrl, string dataDir, HttpClient client, JsonParser json, ILogger logger) {
             _storeUrl = storeUrl;
@@ -68,8 +67,8 @@ namespace TtyhLauncher.Versions {
         }
         
         public bool Contains(FullVersionId id) {
-            var prefixId = Array.FindIndex(_prefixes, p => p.Id == id.Prefix);
-            return prefixId >= 0 && _prefixes[prefixId].Versions.Any(v => v.Id == id.Version);
+            var prefixId = Array.FindIndex(Prefixes, p => p.Id == id.Prefix);
+            return prefixId >= 0 && Prefixes[prefixId].Versions.Any(v => v == id.Version);
         }
 
         public async Task FetchPrefixes() {
@@ -109,7 +108,7 @@ namespace TtyhLauncher.Versions {
         }
 
         private void UpdatePrefixes(IReadOnlyDictionary<string, PrefixVersionsIndex> remoteVersions) {
-            _prefixes = new CachedPrefixInfo[_index.Prefixes.Count];
+            Prefixes = new CachedPrefixInfo[_index.Prefixes.Count];
             
             var i = 0;
             foreach (var (prefixId, prefix) in _index.Prefixes) {
@@ -119,10 +118,10 @@ namespace TtyhLauncher.Versions {
                     versionsIndex = new PrefixVersionsIndex();
 
                 var localVersions = GetLocalVersions(prefixId);
-                _prefixes[i++] = new CachedPrefixInfo(prefixId, prefix.About, versionsIndex, localVersions);
+                Prefixes[i++] = new CachedPrefixInfo(prefixId, prefix.About, versionsIndex, localVersions);
             }
             
-            Array.Sort(_prefixes);
+            Array.Sort(Prefixes);
         }
 
         private VersionIndex[] GetLocalVersions(string prefixId) {

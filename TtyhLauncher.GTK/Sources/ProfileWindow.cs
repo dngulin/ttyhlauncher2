@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Gtk;
 using TtyhLauncher.Profiles.Data;
@@ -9,7 +8,7 @@ using FormItem = Gtk.Builder.ObjectAttribute;
 
 namespace TtyhLauncher.GTK {
     public class ProfileWindow : Window {
-        private readonly IReadOnlyList<CachedPrefixInfo> _prefixes;
+        private readonly CachedPrefixInfo[] _prefixes;
         private readonly Action<string, ProfileData> _doSave;
         
         [FormItem] private readonly Entry _entryName = null;
@@ -26,7 +25,7 @@ namespace TtyhLauncher.GTK {
         public ProfileWindow(
             string profileId,
             ProfileData profileData,
-            IReadOnlyList<CachedPrefixInfo> prefixes,
+            CachedPrefixInfo[] prefixes,
             Action<string, ProfileData> doSave)
             : this(new Builder("ProfileWindow.glade")) {
 
@@ -44,32 +43,31 @@ namespace TtyhLauncher.GTK {
             _buttonSave.Clicked += OnSaveClicked;
             
             var index = prefixes.ToList().FindIndex(p => p.Id == profileData.FullVersion.Prefix);
-            if (index < 0 || index >= _prefixes.Count)
+            if (index < 0 || index >= _prefixes.Length)
                 return;
 
-            var versions = _prefixes[index].Versions.Select(v => v.Id).ToArray();
-            
             _comboPrefixes.Active = index;
-            _comboVersions.Active = Array.IndexOf(versions, profileData.FullVersion.Version);
+            _comboVersions.Active = Array.IndexOf(prefixes[index].Versions, profileData.FullVersion.Version);
         }
 
         private void UpdateVersionsCombo(object sender, EventArgs e) {
             _comboVersions.RemoveAll();
             
             var index = _comboPrefixes.Active;
-            if (index < 0 || index >= _prefixes.Count)
+            if (index < 0 || index >= _prefixes.Length)
                 return;
 
-            var versions = _prefixes[index].Versions.Select(v => v.Id).ToArray();
-            foreach (var version in versions)
+            var prefix = _prefixes[index];
+            
+            foreach (var version in prefix.Versions)
                 _comboVersions.AppendText(version);
             
-            _comboVersions.Active = Array.IndexOf(versions, _prefixes[index].LatestVersion);
+            _comboVersions.Active = Array.IndexOf(prefix.Versions, prefix.LatestVersion);
         }
 
         void OnSaveClicked(object sender, EventArgs e) {
             var index = _comboPrefixes.Active;
-            if (index < 0 || index >= _prefixes.Count) {
+            if (index < 0 || index >= _prefixes.Length) {
                 ShowError("wrong_version");
                 return;
             }

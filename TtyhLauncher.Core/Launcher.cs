@@ -155,7 +155,7 @@ namespace TtyhLauncher {
         }
         
         private void HandleAddProfile() {
-            if (_versions.Prefixes.Count <= 0) {
+            if (_versions.Prefixes.Length <= 0) {
                 _ui.ShowErrorMessage(Strings.NoVersionsAvailable);
                 return;
             }

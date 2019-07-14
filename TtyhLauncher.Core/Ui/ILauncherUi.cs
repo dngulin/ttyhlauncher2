@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Utils.Data;
@@ -37,6 +36,6 @@ namespace TtyhLauncher.Ui {
         IProgress<CheckingState> ShowCheckingTask();
         void HideTask();
 
-        void ShowProfile(string id, ProfileData profile, IReadOnlyList<CachedPrefixInfo> prefixes, Action<string, ProfileData> doSave);
+        void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> doSave);
     }
 }

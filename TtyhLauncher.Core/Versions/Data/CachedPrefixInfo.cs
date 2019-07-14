@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TtyhLauncher.Json.Minecraft;
 using TtyhLauncher.Json.Ttyh;
 
 namespace TtyhLauncher.Versions.Data {
     public class CachedPrefixInfo : IComparable<CachedPrefixInfo>, IComparable {
         private const string ReleaseKey = "release";
+        private const string LatestAlias = "latest";
 
         public string Id { get; }
         public string About { get; }
         public string LatestVersion { get; }
 
-        private readonly List<CachedVersionInfo> _versions;
-        public IReadOnlyList<CachedVersionInfo> Versions => _versions;
+        public string[] Versions { get; }
 
         public CachedPrefixInfo(
             string id,
@@ -25,26 +26,33 @@ namespace TtyhLauncher.Versions.Data {
             
             remoteIndex.Latest.TryGetValue(ReleaseKey, out var latest);
             
-            _versions = new List<CachedVersionInfo>(remoteIndex.Versions.Length + localVersions.Length);
-            
-            var knownIds = new HashSet<string>();
+            var versions = new List<CachedVersionInfo>(remoteIndex.Versions.Length + localVersions.Length + 1) {
+                new CachedVersionInfo(LatestAlias)
+            };
+
+            var knownIds = new HashSet<string> {LatestAlias};
 
             if (remoteIndex.Versions != null) {
                 foreach (var versionEntry in remoteIndex.Versions) {
+                    if (versionEntry.Id == LatestAlias)
+                        continue;
+
                     knownIds.Add(versionEntry.Id);
-                    _versions.Add(new CachedVersionInfo(versionEntry));
+                    versions.Add(new CachedVersionInfo(versionEntry));
                 }
             }
 
             foreach (var versionIndex in localVersions) {
                 if (!knownIds.Contains(versionIndex.Id)) {
-                    _versions.Add(new CachedVersionInfo(versionIndex));
+                    versions.Add(new CachedVersionInfo(versionIndex));
                 }
             }
             
-            _versions.Sort();
+            versions.Sort();
+
+            Versions = versions.Select(v => v.Id).ToArray();
             
-            LatestVersion = latest ?? (_versions.Count > 0 ? _versions[0].Id : null);
+            LatestVersion = latest ?? (versions.Count > 0 ? versions[0].Id : null);
         }
         
         public int CompareTo(CachedPrefixInfo other) {
