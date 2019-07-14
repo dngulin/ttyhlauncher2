@@ -13,6 +13,7 @@ namespace TtyhLauncher.Ui {
         
         event Action OnAddProfileClicked;
         event Action OnEditProfileClicked;
+        event Action OnRemoveProfileClicked;
 
         bool OfflineMode { get; set; }
         bool SavePassword { get; set; }

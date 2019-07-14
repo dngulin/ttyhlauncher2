@@ -77,7 +77,12 @@ namespace TtyhLauncher.Profiles {
             }
         }
 
-        public bool Contains(string profileId) => _profiles.ContainsKey(profileId);
+        public bool Contains(string profileId) {
+            if (profileId == null)
+                return false;
+            
+            return _profiles.ContainsKey(profileId);
+        }
 
         public ProfileData GetProfileData(string id) => _profiles[id].Clone();
 
@@ -129,6 +134,22 @@ namespace TtyhLauncher.Profiles {
             _profiles[newId] = _profiles[oldId];
             _profiles.Remove(oldId);
         }
+        
+        private static bool ValidateProfileId(string id) {
+            if (string.IsNullOrEmpty(id))
+                return false;
+
+            if (id.Trim() == string.Empty)
+                return false;
+
+            var allowed = new[] {' ', '-', '_', '.', ',', '!', '?'};
+
+            return id.All(ch => char.IsLetterOrDigit(ch) || allowed.Contains(ch));
+        }
+        
+        private static bool ValidateVersion(FullVersionId version) {
+            return version.Prefix != null && version.Version != null;
+        }
 
         public void UpdateData(string profileId, ProfileData profileData) {
             _log.Info($"Update profile {profileId}");
@@ -142,20 +163,14 @@ namespace TtyhLauncher.Profiles {
             _profiles[profileId] = profileData.Clone();
         }
 
-        private static bool ValidateVersion(FullVersionId version) {
-            return version.Prefix != null && version.Version != null;
-        }
+        public void Remove(string profileId) {
+            if (!_profiles.ContainsKey(profileId)) {
+                _log.Error($"Try to delete non existing profile '{profileId}'");
+                return;
+            }
 
-        private static bool ValidateProfileId(string id) {
-            if (string.IsNullOrEmpty(id))
-                return false;
-
-            if (id.Trim() == string.Empty)
-                return false;
-
-            var allowed = new[] {' ', '-', '_', '.', ',', '!', '?'};
-
-            return id.All(ch => char.IsLetterOrDigit(ch) || allowed.Contains(ch));
+            Directory.Delete(Path.Combine(_profilesPath, profileId), true);
+            _profiles.Remove(profileId);
         }
         
         public void UpdateInstalledFiles(string profileId, FullVersionId versionId) {

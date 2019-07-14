@@ -66,6 +66,7 @@ namespace TtyhLauncher {
             
             _ui.OnEditProfileClicked += HandleEditProfile;
             _ui.OnAddProfileClicked += HandleAddProfile;
+            _ui.OnRemoveProfileClicked += HandleRemoveProfile;
         }
 
         public void Start() {
@@ -141,6 +142,12 @@ namespace TtyhLauncher {
         
         private void HandleEditProfile() {
             var id = _ui.SelectedProfile;
+            
+            if (!_profiles.Contains(id)) {
+                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
+                return;
+            }
+            
             var data = _profiles.GetProfileData(id);
             _ui.ShowProfile(id, data, _versions.Prefixes, (newId, newData) => TryUpdateProfile(id, newId, newData));
         }
@@ -172,6 +179,27 @@ namespace TtyhLauncher {
         private void TryCreateProfile(string id, ProfileData data) {
             _profiles.Create(id, data);
             _ui.SetProfiles(_profiles.Names, id);
+        }
+
+        private void HandleRemoveProfile() {
+            var id = _ui.SelectedProfile;
+            
+            if (!_profiles.Contains(id)) {
+                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
+                return;
+            }
+
+            try {
+                _profiles.Remove(id);
+            }
+            catch {
+                _ui.ShowErrorMessage(Strings.CantDeleteProfile);
+                return;
+            }
+
+            var profileNames = _profiles.Names;
+            _settings.Profile = profileNames.Length > 0 ? profileNames[0] : string.Empty;
+            _ui.SetProfiles(_profiles.Names, _settings.Profile);
         }
 
         private void LoadWindowSettings() {

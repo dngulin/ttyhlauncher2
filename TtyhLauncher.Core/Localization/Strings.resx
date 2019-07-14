@@ -48,4 +48,7 @@
     <data name="FailedToBecomeOnline" xml:space="preserve">
         <value>Failed to switch into the online mode!</value>
     </data>
+    <data name="CantDeleteProfile" xml:space="preserve">
+        <value>Cant delete profile!</value>
+    </data>
 </root>

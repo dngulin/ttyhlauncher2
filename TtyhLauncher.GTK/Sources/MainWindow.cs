@@ -22,6 +22,7 @@ namespace TtyhLauncher.GTK {
         
         [FormItem] private readonly MenuItem _actEditProfile = null;
         [FormItem] private readonly MenuItem _actAddProfile = null;
+        [FormItem] private readonly MenuItem _actRemoveProfile = null;
         
         [FormItem] private readonly TextView _logTextView = null;
         private readonly TextBuffer _logBuffer;
@@ -49,6 +50,7 @@ namespace TtyhLauncher.GTK {
         
         public event Action OnAddProfileClicked;
         public event Action OnEditProfileClicked;
+        public event Action OnRemoveProfileClicked;
 
         public bool OfflineMode {
             get => _actToggleOffline.Active;
@@ -104,6 +106,7 @@ namespace TtyhLauncher.GTK {
 
             _actAddProfile.Activated += (s, a) => OnAddProfileClicked?.Invoke();
             _actEditProfile.Activated += (s, a) => OnEditProfileClicked?.Invoke();
+            _actRemoveProfile.Activated += (s, a) => OnRemoveProfileClicked?.Invoke();
         }
         
         public void SetWindowVisible(bool isVisible) {
