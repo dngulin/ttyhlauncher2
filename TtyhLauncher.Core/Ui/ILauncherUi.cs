@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Utils.Data;
 using TtyhLauncher.Versions.Data;
@@ -28,8 +29,8 @@ namespace TtyhLauncher.Ui {
         void AppendLog(string line);
         void SetInteractable(bool interactable);
         void SetProfiles(string[] names, string selected);
-
-        void ShowErrorMessage(string message);
+        
+        void ShowErrorMessage([Localizable(true)]string message, string details = null);
         bool AskForDownloads(int filesCount, long totalSize);
         
         IProgress<DownloadingState> ShowDownloadingTask();

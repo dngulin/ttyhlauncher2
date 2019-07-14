@@ -1,5 +1,6 @@
 .idea
 *.DotSettings.user
+*.Designer.cs
 
 TtyhLauncher.Core/bin
 TtyhLauncher.Core/obj

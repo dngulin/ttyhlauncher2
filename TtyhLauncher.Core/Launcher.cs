@@ -3,9 +3,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using TtyhLauncher.Localization;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Master;
 using TtyhLauncher.Master.Data;
+using TtyhLauncher.Master.Exceptions;
 using TtyhLauncher.Profiles;
 using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Settings;
@@ -110,7 +112,7 @@ namespace TtyhLauncher {
             }
             
             if (_ui.OfflineMode)
-                _ui.ShowErrorMessage("offline_mode_enabled");
+                _ui.ShowErrorMessage(Strings.FailedToBecomeOnline);
         }
 
         private async Task<bool> TryFetchPrefixes() {
@@ -141,7 +143,7 @@ namespace TtyhLauncher {
         
         private void HandleAddProfile() {
             if (_versions.Prefixes.Count <= 0) {
-                _ui.ShowErrorMessage("no_versions_available");
+                _ui.ShowErrorMessage(Strings.NoVersionsAvailable);
                 return;
             }
 
@@ -188,7 +190,7 @@ namespace TtyhLauncher {
 
         private async void HandlePlayButtonClicked() {
             if (!_profiles.Contains(_ui.SelectedProfile)) {
-                _ui.ShowErrorMessage("profile_does_not_exists");
+                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
                 return;
             }
 
@@ -217,7 +219,7 @@ namespace TtyhLauncher {
                 _profiles.UpdateInstalledFiles(profileId);
             }
             catch {
-                _ui.ShowErrorMessage("cant_sync_profile");
+                _ui.ShowErrorMessage(Strings.FailedToUpdateProfile);
                 return;
             }
 
@@ -225,8 +227,12 @@ namespace TtyhLauncher {
             try {
                 tokens = await _ttyhClient.Login(_ui.UserName, _ui.Password);
             }
+            catch (ErrorAnswerException e) {
+                _ui.ShowErrorMessage(Strings.FailedToLogin, e.Message);
+                return;
+            }
             catch (Exception) {
-                _ui.ShowErrorMessage("login_error");
+                _ui.ShowErrorMessage(Strings.FailedToLogin);
                 return;
             }
                 
@@ -238,7 +244,7 @@ namespace TtyhLauncher {
                 await _versions.FetchVersionIndexes(profile.FullVersion);
             }
             catch {
-                _ui.ShowErrorMessage("cant_update_version_indexes");
+                _ui.ShowErrorMessage(Strings.FailedToFetchIndexes);
                 return false;
             }
 
@@ -247,7 +253,7 @@ namespace TtyhLauncher {
                 fileList = _versions.GetVersionFilesInfo(profile.FullVersion);
             }
             catch {
-                _ui.ShowErrorMessage("corrupted_version_indexes");
+                _ui.ShowErrorMessage(Strings.VersionIndexesCorrupted);
                 return false;
             }
             
@@ -262,8 +268,8 @@ namespace TtyhLauncher {
             catch (OperationCanceledException) {
                 return false;
             }
-            catch (Exception e){
-                _ui.ShowErrorMessage("cant_check_version " + e.Message);
+            catch {
+                _ui.ShowErrorMessage(Strings.FailedToCheckVersion);
                 return false;
             }
             finally {
@@ -294,7 +300,7 @@ namespace TtyhLauncher {
                 return false;
             }
             catch {
-                _ui.ShowErrorMessage("cant_download_version");
+                _ui.ShowErrorMessage(Strings.DownloadVersionError);
                 return false;
             }
             finally {
@@ -320,7 +326,7 @@ namespace TtyhLauncher {
                 }
             }
             catch (Exception) {
-                _ui.ShowErrorMessage("run_error");
+                _ui.ShowErrorMessage(Strings.RunError);
             }
 
             if (_ui.HideOnRun)

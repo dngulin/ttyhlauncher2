@@ -146,9 +146,11 @@ namespace TtyhLauncher.GTK {
             _logBuffer.Delete(ref cutStart, ref cutEnd);
         }
 
-        public void ShowErrorMessage(string message) {
-            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, message);
-            dialog.Title = "Error";
+        public void ShowErrorMessage(string message, string details = null) {
+            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, message) {
+                Title = "Error",
+                SecondaryText = details
+            };
             dialog.Run();
             dialog.Destroy();
         }
