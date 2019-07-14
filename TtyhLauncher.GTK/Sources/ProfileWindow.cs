@@ -65,7 +65,7 @@ namespace TtyhLauncher.GTK {
             _comboVersions.Active = Array.IndexOf(prefix.Versions, prefix.LatestVersion);
         }
 
-        void OnSaveClicked(object sender, EventArgs e) {
+        private void OnSaveClicked(object sender, EventArgs e) {
             var index = _comboPrefixes.Active;
             if (index < 0 || index >= _prefixes.Length) {
                 ShowError("wrong_version");

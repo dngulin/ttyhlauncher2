@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Gtk;
 using Pango;
 using TtyhLauncher.Profiles.Data;
@@ -51,6 +52,8 @@ namespace TtyhLauncher.GTK {
         public event Action OnAddProfileClicked;
         public event Action OnEditProfileClicked;
         public event Action OnRemoveProfileClicked;
+        
+        public event Action OnUploadSkinClicked;
 
         public bool OfflineMode {
             get => _actToggleOffline.Active;
@@ -107,6 +110,8 @@ namespace TtyhLauncher.GTK {
             _actAddProfile.Activated += (s, a) => OnAddProfileClicked?.Invoke();
             _actEditProfile.Activated += (s, a) => OnEditProfileClicked?.Invoke();
             _actRemoveProfile.Activated += (s, a) => OnRemoveProfileClicked?.Invoke();
+
+            _actUploadSkin.Activated += (s, a) => OnUploadSkinClicked?.Invoke();
         }
         
         public void SetWindowVisible(bool isVisible) {
@@ -211,8 +216,13 @@ namespace TtyhLauncher.GTK {
             _stackTask.VisibleChild = _labelTaskNothing;
         }
 
-        public void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> doSave) {
-            var window = new ProfileWindow(id, profile, prefixes, doSave) {TransientFor = this};
+        public void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> save) {
+            var window = new ProfileWindow(id, profile, prefixes, save) {TransientFor = this};
+            window.ShowAll();
+        }
+
+        public void ShowSkinUpload(Func<string, bool, Task> upload) {
+            var window = new SkinUploadWindow(upload) {TransientFor = this};
             window.ShowAll();
         }
     }

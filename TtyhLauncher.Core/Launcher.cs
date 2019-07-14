@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -63,6 +64,8 @@ namespace TtyhLauncher {
             _ui.OnExit += HandleExit;
             _ui.OnPlayButtonClicked += HandlePlayButtonClicked;
             _ui.OnOfflineModeToggle += HandleOfflineModeToggle;
+
+            _ui.OnUploadSkinClicked += HandleSkinUploadClicked;
             
             _ui.OnEditProfileClicked += HandleEditProfile;
             _ui.OnAddProfileClicked += HandleAddProfile;
@@ -200,6 +203,15 @@ namespace TtyhLauncher {
             var profileNames = _profiles.Names;
             _settings.Profile = profileNames.Length > 0 ? profileNames[0] : string.Empty;
             _ui.SetProfiles(_profiles.Names, _settings.Profile);
+        }
+
+        private void HandleSkinUploadClicked() {
+            _ui.ShowSkinUpload(TryUploadSkin);
+        }
+
+        private async Task TryUploadSkin(string path, bool isSlim) {
+            var bytes = await File.ReadAllBytesAsync(path);
+            await _ttyhClient.UploadSkin(_ui.UserName, _ui.Password, bytes, isSlim);
         }
 
         private void LoadWindowSettings() {

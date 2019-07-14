@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using TtyhLauncher.Profiles.Data;
 using TtyhLauncher.Utils.Data;
 using TtyhLauncher.Versions.Data;
@@ -14,6 +15,8 @@ namespace TtyhLauncher.Ui {
         event Action OnAddProfileClicked;
         event Action OnEditProfileClicked;
         event Action OnRemoveProfileClicked;
+        
+        event Action OnUploadSkinClicked;
 
         bool OfflineMode { get; set; }
         bool SavePassword { get; set; }
@@ -37,6 +40,8 @@ namespace TtyhLauncher.Ui {
         IProgress<CheckingState> ShowCheckingTask();
         void HideTask();
 
-        void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> doSave);
+        void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> save);
+        
+        void ShowSkinUpload(Func<string, bool, Task> upload);
     }
 }
