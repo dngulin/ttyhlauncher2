@@ -41,6 +41,8 @@ namespace TtyhLauncher.Versions {
             _json = json;
             _log = new WrappedLogger(logger, "Versions");
             _log.Info("Initializing...");
+            
+            Prefixes = new CachedPrefixInfo[0];
 
             var dataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData); // XDG_DATA_HOME
             
