@@ -105,7 +105,7 @@ namespace TtyhLauncher {
 
             if (_profiles.IsEmpty) {
                 foreach (var prefix in _versions.Prefixes) {
-                    var fullVersion = new FullVersionId(prefix.Id, prefix.LatestVersion);
+                    var fullVersion = new FullVersionId(prefix.Id, IndexTool.VersionAliasLatest);
                     try {
                         _profiles.Create(prefix.About, new ProfileData {FullVersion = fullVersion});
                         if (!_profiles.Contains(_settings.Profile)) {
@@ -207,27 +207,36 @@ namespace TtyhLauncher {
 
             _ui.SetInteractable(false);
             
-            await CheckAndRun();
+            var profileId = _ui.SelectedProfile;
+            var profile = _profiles.GetProfileData(profileId);
+            
+            if (profile.FullVersion.Version == IndexTool.VersionAliasLatest) {
+                _log.Info($"Resolving a version {profile.FullVersion}");
+                var prefix = profile.FullVersion.Prefix;
+                var version = _versions.Prefixes.FirstOrDefault(p => p.Id == prefix)?.LatestVersion;
+                profile.FullVersion = new FullVersionId(prefix, version ?? IndexTool.VersionAliasLatest);
+                _log.Info($"Version resolved to {profile.FullVersion}");
+            }
+            
+            await CheckAndRun(profileId, profile);
             
             _ui.SetInteractable(true);
         }
 
-        private async Task CheckAndRun() {
-            var profileId = _ui.SelectedProfile;
+        private async Task CheckAndRun(string profileId, ProfileData profile) {
+            
             
             if (_ui.OfflineMode) {
-                await Run(profileId);
+                await Run(profileId, profile);
                 return;
             }
-                
-            var profile = _profiles.GetProfileData(profileId);
-                
+
             if (profile.CheckVersionFiles && !await CheckProfile(profile)) {
                 return;
             }
             
             try {
-                _profiles.UpdateInstalledFiles(profileId);
+                _profiles.UpdateInstalledFiles(profileId, profile.FullVersion);
             }
             catch {
                 _ui.ShowErrorMessage(Strings.FailedToUpdateProfile);
@@ -247,7 +256,7 @@ namespace TtyhLauncher {
                 return;
             }
                 
-            await Run(profileId, tokens);
+            await Run(profileId, profile, tokens);
         }
 
         private async Task<bool> CheckProfile(ProfileData profile) {
@@ -322,13 +331,11 @@ namespace TtyhLauncher {
             return true;
         }
 
-        private async Task Run(string profileId, LoginResultData tokens = null) {
+        private async Task Run(string profileId, ProfileData profile, LoginResultData tokens = null) {
             if (_ui.HideOnRun)
                 _ui.SetWindowVisible(false);
 
             try {
-                var profile = _profiles.GetProfileData(profileId);
-                
                 if (tokens == null) {
                     await _runner.Run(profileId, profile, _ui.UserName);
                 }

@@ -157,15 +157,9 @@ namespace TtyhLauncher.Profiles {
 
             return id.All(ch => char.IsLetterOrDigit(ch) || allowed.Contains(ch));
         }
-
-
-        public void UpdateInstalledFiles(string profileId) {
+        
+        public void UpdateInstalledFiles(string profileId, FullVersionId versionId) {
             var profileDir = Path.Combine(_profilesPath, profileId);
-            var versionId = _profiles[profileId].FullVersion;
-            InstallFiles(profileDir, versionId);
-        }
-
-        private void InstallFiles(string profileDir, FullVersionId versionId) {
             var filesIndexPath = Path.Combine(profileDir, FilesIndexName);
             var dataIndexPath = Path.Combine(_versionsPath, versionId.Prefix, versionId.Version, DataIndexName);
 

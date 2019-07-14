@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TtyhLauncher.Json.Minecraft;
 using TtyhLauncher.Json.Ttyh;
+using TtyhLauncher.Utils;
 
 namespace TtyhLauncher.Versions.Data {
     public class CachedPrefixInfo : IComparable<CachedPrefixInfo>, IComparable {
-        private const string ReleaseKey = "release";
-        private const string LatestAlias = "latest";
-
         public string Id { get; }
         public string About { get; }
         public string LatestVersion { get; }
@@ -24,17 +22,17 @@ namespace TtyhLauncher.Versions.Data {
             Id = id;
             About = about;
             
-            remoteIndex.Latest.TryGetValue(ReleaseKey, out var latest);
+            remoteIndex.Latest.TryGetValue(IndexTool.VersionTypeRelease, out var latest);
             
             var versions = new List<CachedVersionInfo>(remoteIndex.Versions.Length + localVersions.Length + 1) {
-                new CachedVersionInfo(LatestAlias)
+                new CachedVersionInfo(IndexTool.VersionAliasLatest)
             };
 
-            var knownIds = new HashSet<string> {LatestAlias};
+            var knownIds = new HashSet<string> {IndexTool.VersionAliasLatest};
 
             if (remoteIndex.Versions != null) {
                 foreach (var versionEntry in remoteIndex.Versions) {
-                    if (versionEntry.Id == LatestAlias)
+                    if (versionEntry.Id == IndexTool.VersionAliasLatest)
                         continue;
 
                     knownIds.Add(versionEntry.Id);

@@ -5,6 +5,9 @@ using TtyhLauncher.Json.Minecraft;
 
 namespace TtyhLauncher.Utils {
     public static class IndexTool {
+        public const string VersionTypeRelease = "release";
+        public const string VersionAliasLatest = "latest";
+        
         public static string GetAssetIndexName(VersionIndex versionIndex) {
             if (versionIndex.AssetIndex != null) {
                 return $"{versionIndex.AssetIndex.Sha1}/{versionIndex.AssetIndex.Id}";
