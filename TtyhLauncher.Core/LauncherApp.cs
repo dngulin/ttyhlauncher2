@@ -37,11 +37,12 @@ namespace TtyhLauncher {
                 logger.OnLog += Console.Out.WriteLine;
 
                 var versions = new VersionsManager(storeUrl, directory, httpClient, json, logger);
-                var profiles = new ProfilesManager(directory, json, logger, appName, appVersion);
+                var profiles = new ProfilesManager(directory, json, logger);
                 var ttyhClient = new TtyhClient(masterUrl, appVersion, settings.Ticket, httpClient, serializer, logger);
+                var runner = new GameRunner(directory, json, logger, appName, appVersion);
                 
                 var ui = CreateUi($"{appName} - {appVersion}");
-                var launcher = new Launcher(settings, versions, profiles, httpClient, ttyhClient, ui, logger, appName);
+                var launcher = new Launcher(settings, versions, profiles, httpClient, ttyhClient, runner, ui, logger, appName);
                 
                 launcher.Start();
                 RunEventLoop();

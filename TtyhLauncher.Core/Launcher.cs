@@ -22,6 +22,7 @@ namespace TtyhLauncher {
         private readonly ProfilesManager _profiles;
         
         private readonly TtyhClient _ttyhClient;
+        private readonly GameRunner _runner;
         private readonly HashChecker _hashChecker;
         private readonly Downloader _downloader;
         
@@ -29,13 +30,24 @@ namespace TtyhLauncher {
         private readonly ILogger _logger;
         private readonly WrappedLogger _log;
 
-        public Launcher(SettingsManager settings, VersionsManager versions, ProfilesManager profiles,
-            HttpClient httpClient, TtyhClient ttyhClient, ILauncherUi ui, ILogger logger, string name) {
+        public Launcher(
+            SettingsManager settings,
+            VersionsManager versions,
+            ProfilesManager profiles,
+            HttpClient httpClient,
+            TtyhClient ttyhClient,
+            GameRunner runner,
+            ILauncherUi ui,
+            ILogger logger,
+            string launcherName) {
+            
             _settings = settings;
             _versions = versions;
             _profiles = profiles;
             
             _ttyhClient = ttyhClient;
+            _runner = runner;
+            
             _hashChecker = new HashChecker(logger);
             _downloader = new Downloader(httpClient, logger);
             
@@ -44,7 +56,7 @@ namespace TtyhLauncher {
             _logger = logger;
             _logger.OnLog += _ui.AppendLog;
             
-            _log = new WrappedLogger(logger, name);
+            _log = new WrappedLogger(logger, launcherName);
 
             _ui.OnExit += HandleExit;
             _ui.OnPlayButtonClicked += HandlePlayButtonClicked;
@@ -298,11 +310,13 @@ namespace TtyhLauncher {
                 _ui.SetWindowVisible(false);
 
             try {
+                var profile = _profiles.GetProfileData(profileId);
+                
                 if (tokens == null) {
-                    await _profiles.Run(profileId, _ui.UserName);
+                    await _runner.Run(profileId, profile, _ui.UserName);
                 }
                 else {
-                    await _profiles.Run(profileId, _ui.UserName, tokens.ClientToken, tokens.AccessToken);
+                    await _runner.Run(profileId, profile, _ui.UserName, tokens.ClientToken, tokens.AccessToken);
                 }
             }
             catch (Exception) {
