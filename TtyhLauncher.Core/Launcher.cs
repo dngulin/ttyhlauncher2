@@ -102,15 +102,28 @@ namespace TtyhLauncher {
 
             var state = _ui.OfflineMode ? "offline" : "online";
             _log.Info($"Is {state} now!");
-            
-            if (!_profiles.Contains(_settings.Profile) && _versions.Prefixes.Count > 0) {
-                var defaultPrefix = _versions.Prefixes[0];
-                _settings.Profile = !_profiles.IsEmpty ? _profiles.Names[0] : _profiles.CreateDefault(defaultPrefix);
-                _log.Info($"Created default profile : '{_settings.Profile}'");
+
+            if (_profiles.IsEmpty) {
+                foreach (var prefix in _versions.Prefixes) {
+                    var fullVersion = new FullVersionId(prefix.Id, prefix.LatestVersion);
+                    try {
+                        _profiles.Create(prefix.About, new ProfileData {FullVersion = fullVersion});
+                        if (!_profiles.Contains(_settings.Profile)) {
+                            _settings.Profile = prefix.About;
+                        }
+                    }
+                    catch (Exception e) {
+                        _log.Error("Can't create default profile: " + e.Message);
+                    }
+                }
+
+                _ui.SetProfiles(_profiles.Names, _settings.Profile);
                 
+            } else if (!_profiles.Contains(_settings.Profile)) {
+                _settings.Profile = _profiles.Names[0];
                 _ui.SetProfiles(_profiles.Names, _settings.Profile);
             }
-            
+
             if (_ui.OfflineMode)
                 _ui.ShowErrorMessage(Strings.FailedToBecomeOnline);
         }
@@ -162,9 +175,7 @@ namespace TtyhLauncher {
         }
 
         private void LoadWindowSettings() {
-            if (!_profiles.IsEmpty) {
-                _ui.SetProfiles(_profiles.Names, _settings.Profile);
-            }
+            _ui.SetProfiles(_profiles.Names, _settings.Profile);
             
             _ui.UserName = _settings.UserName;
             _ui.Password = _settings.Password;

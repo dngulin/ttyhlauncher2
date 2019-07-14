@@ -81,14 +81,6 @@ namespace TtyhLauncher.Profiles {
 
         public ProfileData GetProfileData(string id) => _profiles[id].Clone();
 
-        public string CreateDefault(CachedPrefixInfo prefixInfo) {
-            var fullVersion = new FullVersionId(prefixInfo.Id, prefixInfo.LatestVersion);
-            var prefixId = $"{prefixInfo.About} {fullVersion.Version}";
-            
-            Create(prefixId, new ProfileData {FullVersion = fullVersion});
-            return prefixId;
-        }
-
         public void Create(string profileId, ProfileData profileData) {
             _log.Info($"Create new profile {profileId}");
             
