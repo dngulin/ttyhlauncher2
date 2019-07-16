@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TtyhLauncher.Core\n"
-"POT-Creation-Date: 2019-07-16 22:59+0300\n"
-"PO-Revision-Date: 2019-07-16 22:59+0300\n"
+"POT-Creation-Date: 2019-07-17 00:32+0300\n"
+"PO-Revision-Date: 2019-07-17 00:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -13,52 +13,54 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Poedit-KeywordsList: _tr._\n"
+"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
+"GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;"
+"_pn:1c,2,3\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Launcher.cs:138
+#: Launcher.cs:136
 msgid "Failed to switch into online mode!"
 msgstr "Не удалось соединиться с сервером. Включён оффлайн-режим!"
 
-#: Launcher.cs:156 Launcher.cs:197 Launcher.cs:250
+#: Launcher.cs:154 Launcher.cs:195 Launcher.cs:248
 msgid "Selected profile does not exist!"
 msgstr "Профиль не существует!"
 
-#: Launcher.cs:175
+#: Launcher.cs:173
 msgid "There are no known client versions!"
 msgstr "Нет никакой информации о версиях!"
 
-#: Launcher.cs:205
+#: Launcher.cs:203
 msgid "Failed to delete the profile!"
 msgstr "Не удалось удалить профиль!"
 
-#: Launcher.cs:288
+#: Launcher.cs:286
 msgid "Failed to update selected profile! Try to enable a version checking."
 msgstr ""
 "Не удалось обновить текущий профиль. Попробуйте включить проверку версии."
 
-#: Launcher.cs:297 Launcher.cs:301
+#: Launcher.cs:295 Launcher.cs:299
 msgid "Failed to login! Are your nickname and password correct?"
 msgstr "Ошибка авторизации! Неправльный логин или пароль?"
 
-#: Launcher.cs:313
+#: Launcher.cs:311
 msgid "Failed to fetch version indexes!"
 msgstr "Не удалось получить актуальные индексы версии!"
 
-#: Launcher.cs:322
+#: Launcher.cs:320
 msgid "Looks like version indexes are corrupted! See details in the log."
 msgstr ""
 "Похоже что индексы версии повреждены. Детали ошибки можно найти в логе."
 
-#: Launcher.cs:338
+#: Launcher.cs:336
 msgid "Failed to check version files! See details in the log."
 msgstr "Не удалось проверить файлы версии! Детали ошибки можно найти в логе."
 
-#: Launcher.cs:369
+#: Launcher.cs:367
 msgid "Failed to download version files! See details in the log."
 msgstr "Не удалось загрузить файлы версии! Детали ошибки можно найти в логе."
 
-#: Launcher.cs:393
+#: Launcher.cs:391
 msgid "Something went wrong while minecraft running! See details in the log."
 msgstr ""
 "Что-то пошло не так во время запуска игры! Детали ошибки можно найти в логе."
