@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using NGettext;
 using TtyhLauncher.Localization;
 using TtyhLauncher.Logs;
 using TtyhLauncher.Master;
@@ -32,6 +33,7 @@ namespace TtyhLauncher {
         private readonly ILauncherUi _ui;
         private readonly ILogger _logger;
         private readonly WrappedLogger _log;
+        private readonly Translator _tr;
 
         public Launcher(
             SettingsManager settings,
@@ -43,6 +45,8 @@ namespace TtyhLauncher {
             ILauncherUi ui,
             ILogger logger,
             string launcherName) {
+            
+            _tr = new Translator(new Catalog("launcher", "./locale"));
             
             _settings = settings;
             _versions = versions;
@@ -129,7 +133,7 @@ namespace TtyhLauncher {
             }
 
             if (_ui.OfflineMode)
-                _ui.ShowErrorMessage(Strings.FailedToBecomeOnline);
+                _ui.ShowErrorMessage(_tr._("Failed to switch into online mode!"));
         }
 
         private async Task<bool> TryFetchPrefixes() {
@@ -147,7 +151,7 @@ namespace TtyhLauncher {
             var id = _ui.SelectedProfile;
             
             if (!_profiles.Contains(id)) {
-                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
+                _ui.ShowErrorMessage(_tr._("Selected profile does not exist!"));
                 return;
             }
             
@@ -166,7 +170,7 @@ namespace TtyhLauncher {
         
         private void HandleAddProfile() {
             if (_versions.Prefixes.Length <= 0) {
-                _ui.ShowErrorMessage(Strings.NoVersionsAvailable);
+                _ui.ShowErrorMessage(_tr._("There are no known client versions!"));
                 return;
             }
 
@@ -188,7 +192,7 @@ namespace TtyhLauncher {
             var id = _ui.SelectedProfile;
             
             if (!_profiles.Contains(id)) {
-                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
+                _ui.ShowErrorMessage(_tr._("Selected profile does not exist!"));
                 return;
             }
 
@@ -196,7 +200,7 @@ namespace TtyhLauncher {
                 _profiles.Remove(id);
             }
             catch {
-                _ui.ShowErrorMessage(Strings.CantDeleteProfile);
+                _ui.ShowErrorMessage(_tr._("Failed to delete the profile!"));
                 return;
             }
 
@@ -241,7 +245,7 @@ namespace TtyhLauncher {
 
         private async void HandlePlayButtonClicked() {
             if (!_profiles.Contains(_ui.SelectedProfile)) {
-                _ui.ShowErrorMessage(Strings.ProfileDoesNotExist);
+                _ui.ShowErrorMessage(_tr._("Selected profile does not exist!"));
                 return;
             }
 
@@ -279,7 +283,7 @@ namespace TtyhLauncher {
                 _profiles.UpdateInstalledFiles(profileId, profile.FullVersion);
             }
             catch {
-                _ui.ShowErrorMessage(Strings.FailedToUpdateProfile);
+                _ui.ShowErrorMessage(_tr._("Failed to update selected profile! Try to enable a version checking."));
                 return;
             }
 
@@ -288,11 +292,11 @@ namespace TtyhLauncher {
                 tokens = await _ttyhClient.Login(_ui.UserName, _ui.Password);
             }
             catch (ErrorAnswerException e) {
-                _ui.ShowErrorMessage(Strings.FailedToLogin, e.Message);
+                _ui.ShowErrorMessage(_tr._("Failed to login! Are your nickname and password correct?"), e.Message);
                 return;
             }
             catch (Exception) {
-                _ui.ShowErrorMessage(Strings.FailedToLogin);
+                _ui.ShowErrorMessage(_tr._("Failed to login! Are your nickname and password correct?"));
                 return;
             }
                 
@@ -304,7 +308,7 @@ namespace TtyhLauncher {
                 await _versions.FetchVersionIndexes(profile.FullVersion);
             }
             catch {
-                _ui.ShowErrorMessage(Strings.FailedToFetchIndexes);
+                _ui.ShowErrorMessage(_tr._("Failed to fetch version indexes!"));
                 return false;
             }
 
@@ -313,7 +317,7 @@ namespace TtyhLauncher {
                 fileList = _versions.GetVersionFilesInfo(profile.FullVersion);
             }
             catch {
-                _ui.ShowErrorMessage(Strings.VersionIndexesCorrupted);
+                _ui.ShowErrorMessage(_tr._("Looks like version indexes are corrupted! See details in the log."));
                 return false;
             }
             
@@ -329,7 +333,7 @@ namespace TtyhLauncher {
                 return false;
             }
             catch {
-                _ui.ShowErrorMessage(Strings.FailedToCheckVersion);
+                _ui.ShowErrorMessage(_tr._("Failed to check version files! See details in the log."));
                 return false;
             }
             finally {
@@ -360,7 +364,7 @@ namespace TtyhLauncher {
                 return false;
             }
             catch {
-                _ui.ShowErrorMessage(Strings.DownloadVersionError);
+                _ui.ShowErrorMessage(_tr._("Failed to download version files! See details in the log."));
                 return false;
             }
             finally {
@@ -384,7 +388,7 @@ namespace TtyhLauncher {
                 }
             }
             catch (Exception) {
-                _ui.ShowErrorMessage(Strings.RunError);
+                _ui.ShowErrorMessage(_tr._("Something went wrong while minecraft running! See details in the log."));
             }
 
             if (_ui.HideOnRun)
