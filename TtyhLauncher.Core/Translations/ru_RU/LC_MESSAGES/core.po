@@ -1,0 +1,64 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TtyhLauncher.Core\n"
+"POT-Creation-Date: 2019-07-16 22:59+0300\n"
+"PO-Revision-Date: 2019-07-16 22:59+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: _tr._\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Launcher.cs:138
+msgid "Failed to switch into online mode!"
+msgstr "Не удалось соединиться с сервером. Включён оффлайн-режим!"
+
+#: Launcher.cs:156 Launcher.cs:197 Launcher.cs:250
+msgid "Selected profile does not exist!"
+msgstr "Профиль не существует!"
+
+#: Launcher.cs:175
+msgid "There are no known client versions!"
+msgstr "Нет никакой информации о версиях!"
+
+#: Launcher.cs:205
+msgid "Failed to delete the profile!"
+msgstr "Не удалось удалить профиль!"
+
+#: Launcher.cs:288
+msgid "Failed to update selected profile! Try to enable a version checking."
+msgstr ""
+"Не удалось обновить текущий профиль. Попробуйте включить проверку версии."
+
+#: Launcher.cs:297 Launcher.cs:301
+msgid "Failed to login! Are your nickname and password correct?"
+msgstr "Ошибка авторизации! Неправльный логин или пароль?"
+
+#: Launcher.cs:313
+msgid "Failed to fetch version indexes!"
+msgstr "Не удалось получить актуальные индексы версии!"
+
+#: Launcher.cs:322
+msgid "Looks like version indexes are corrupted! See details in the log."
+msgstr ""
+"Похоже что индексы версии повреждены. Детали ошибки можно найти в логе."
+
+#: Launcher.cs:338
+msgid "Failed to check version files! See details in the log."
+msgstr "Не удалось проверить файлы версии! Детали ошибки можно найти в логе."
+
+#: Launcher.cs:369
+msgid "Failed to download version files! See details in the log."
+msgstr "Не удалось загрузить файлы версии! Детали ошибки можно найти в логе."
+
+#: Launcher.cs:393
+msgid "Something went wrong while minecraft running! See details in the log."
+msgstr ""
+"Что-то пошло не так во время запуска игры! Детали ошибки можно найти в логе."

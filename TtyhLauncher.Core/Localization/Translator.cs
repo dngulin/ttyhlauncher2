@@ -2,9 +2,9 @@ using NGettext;
 
 namespace TtyhLauncher.Localization {
     public class Translator {
-        private readonly Catalog _catalog;
+        private readonly ICatalog _catalog;
         
-        public Translator(Catalog catalog) {
+        public Translator(ICatalog catalog) {
             _catalog = catalog;
         }
 

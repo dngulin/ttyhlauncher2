@@ -14,39 +14,10 @@
       <EmbeddedResource Include="**\*.glade">
         <LogicalName>%(Filename)%(Extension)</LogicalName>
       </EmbeddedResource>
-      <None Include="Resourses\MainWindow.glade" />
     </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\TtyhLauncher.Core\TtyhLauncher.Core.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <_UnmanagedRegistrationCache Remove="obj\TtyhLauncher.GTK.csproj.UnmanagedRegistration.cache" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.csproj.ResolveComReference.cache" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.dll" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.pdb" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.dll" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.dll.manifest" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <DeployManifest Remove="obj\Debug\netcoreapp2.2\TtyhLauncher.GTK.application" />
     </ItemGroup>
 
 </Project>

@@ -46,8 +46,8 @@ namespace TtyhLauncher {
             ILogger logger,
             string launcherName) {
             
-            _tr = new Translator(new Catalog("launcher", "./locale"));
-            
+            _tr = new Translator(new Catalog("core", "Translations"));
+
             _settings = settings;
             _versions = versions;
             _profiles = profiles;
