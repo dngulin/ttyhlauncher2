@@ -153,12 +153,7 @@ namespace TtyhLauncher.GTK {
         }
 
         public void ShowErrorMessage(string message, string details = null) {
-            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, message) {
-                Title = "Error",
-                SecondaryText = details
-            };
-            dialog.Run();
-            dialog.Destroy();
+            Msg.Error(this, message, details);
         }
 
         public bool AskForDownloads(int filesCount, long totalSize) {
