@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-07-17 23:36+0300\n"
-"PO-Revision-Date: 2019-07-17 23:36+0300\n"
+"POT-Creation-Date: 2019-07-18 22:13+0300\n"
+"PO-Revision-Date: 2019-07-18 22:20+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -172,6 +172,26 @@ msgstr "Загрузка файлов"
 msgid "Checking files"
 msgstr "Проверка файлов"
 
+#: Sources/MainWindow.cs:225
+#, csharp-format
+msgid "Profile '{0}' will be removed."
+msgstr "Профиль \"{0}\" будет удален."
+
+#: Sources/MainWindow.cs:226
+msgid "All data related to the profile will be lost!"
+msgstr "Все данные связанные с профилем будут потеряны!"
+
+#: Sources/MainWindow.cs:227
+msgid ""
+"This is the last one confirmation. Please, check the profile name again."
+msgstr ""
+"Это последнее подтверждение. Пожалуйста, убедитесь что выбрали нужный "
+"профиль."
+
+#: Sources/MainWindow.cs:229
+msgid "Confirm a profile deletion"
+msgstr "Подтвердите удаление профиля"
+
 #: Sources/Msg.cs:7
 msgid "Error"
 msgstr "Ошибка"
@@ -196,6 +216,5 @@ msgstr "Не удалось сохранить профиль! Подробна�
 msgid "Failed to upload skin!"
 msgstr "Не удалось загрузить скин!"
 
-#: Sources/Tr.cs:14
-msgid "test me"
-msgstr "проверь меня"
+#~ msgid "test me"
+#~ msgstr "проверь меня"
