@@ -43,5 +43,7 @@ namespace TtyhLauncher.Ui {
         void ShowProfile(string id, ProfileData profile, CachedPrefixInfo[] prefixes, Action<string, ProfileData> save);
         
         void ShowSkinUpload(Func<string, bool, Task> upload);
+        
+        bool ConfirmProfileDeletion(string id);
     }
 }

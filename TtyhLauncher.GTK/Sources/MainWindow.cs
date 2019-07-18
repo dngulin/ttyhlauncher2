@@ -219,5 +219,21 @@ namespace TtyhLauncher.GTK {
             var window = new SkinUploadWindow(upload) {TransientFor = this};
             window.ShowAll();
         }
+
+        public bool ConfirmProfileDeletion(string id) {
+            var questions = new[] {
+                string.Format(Tr._("Profile '{0}' will be removed."), id),
+                string.Format(Tr._("All data related to the profile will be lost!")),
+                string.Format(Tr._("This is the last one confirmation. Please, check the profile name again."))
+            };
+            var title = Tr._("Confirm a profile deletion");
+
+            foreach (var question in questions) {
+                if (!Msg.Ask(this, title, question))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

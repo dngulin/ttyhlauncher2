@@ -197,6 +197,9 @@ namespace TtyhLauncher {
                 return;
             }
 
+            if (!_ui.ConfirmProfileDeletion(id))
+                return;
+
             try {
                 _profiles.Remove(id);
             }
