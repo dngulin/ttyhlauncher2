@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-07-18 22:44+0300\n"
-"PO-Revision-Date: 2019-07-18 22:44+0300\n"
+"POT-Creation-Date: 2019-07-18 23:45+0300\n"
+"PO-Revision-Date: 2019-07-18 23:45+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -111,15 +111,23 @@ msgstr "Название"
 msgid "General"
 msgstr "Основные"
 
-#: Resourses/ProfileWindow.glade:154
+#: Resourses/ProfileWindow.glade:161
+msgid "Java path"
+msgstr "Путь к Java"
+
+#: Resourses/ProfileWindow.glade:174
+msgid "Java arguments"
+msgstr "Параметры Java"
+
+#: Resourses/ProfileWindow.glade:244
 msgid "Check version files before run"
 msgstr "Проверять файлы версии перед запуском"
 
-#: Resourses/ProfileWindow.glade:171
+#: Resourses/ProfileWindow.glade:261
 msgid "Other"
 msgstr "Прочее"
 
-#: Resourses/ProfileWindow.glade:201
+#: Resourses/ProfileWindow.glade:291
 msgid "Save"
 msgstr "Сохранить"
 
@@ -199,25 +207,28 @@ msgstr "Подтвердите удаление профиля"
 msgid "Error"
 msgstr "Ошибка"
 
-#: Sources/ProfileWindow.cs:71
+#: Sources/ProfileWindow.cs:88
 msgid "Incorrect profile version!"
 msgstr "Некорректная версия профиля!"
 
-#: Sources/ProfileWindow.cs:89
+#: Sources/ProfileWindow.cs:110
 msgid "Incorrect profile name!"
 msgstr "Некорректное название профиля!"
 
-#: Sources/ProfileWindow.cs:92
+#: Sources/ProfileWindow.cs:113
 msgid "Incorrect game version!"
 msgstr "Некорректная версия профиля!"
 
-#: Sources/ProfileWindow.cs:95
+#: Sources/ProfileWindow.cs:116
 msgid "Failed to save profile! See details in the log."
 msgstr "Не удалось сохранить профиль! Подробная информация в логе."
 
 #: Sources/SkinUploadWindow.cs:33 Sources/SkinUploadWindow.cs:37
 msgid "Failed to upload skin!"
 msgstr "Не удалось загрузить скин!"
+
+#~ msgid "Java"
+#~ msgstr "Java"
 
 #~ msgid "test me"
 #~ msgstr "проверь меня"
