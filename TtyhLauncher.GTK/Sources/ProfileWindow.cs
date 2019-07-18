@@ -16,6 +16,12 @@ namespace TtyhLauncher.GTK {
         [FormItem] private readonly ComboBoxText _comboVersions = null;
         [FormItem] private readonly CheckButton _toggleCheckVersion = null;
         
+        [FormItem] private readonly CheckButton _toggleJavaPath = null;
+        [FormItem] private readonly FileChooserButton _buttonJavaPath = null;
+        
+        [FormItem] private readonly CheckButton _toggleJavaArgs = null;
+        [FormItem] private readonly Entry _entryJavaArgs = null;
+        
         [FormItem] private readonly Button _buttonSave = null;
 
         private ProfileWindow(Builder builder) : base(builder.GetObject("ProfileWindow").Handle) {
@@ -43,11 +49,22 @@ namespace TtyhLauncher.GTK {
             _buttonSave.Clicked += OnSaveClicked;
             
             var index = prefixes.ToList().FindIndex(p => p.Id == profileData.FullVersion.Prefix);
-            if (index < 0 || index >= _prefixes.Length)
-                return;
+            if (index >= 0 && index < _prefixes.Length) {
+                _comboPrefixes.Active = index;
+                _comboVersions.Active = Array.IndexOf(prefixes[index].Versions, profileData.FullVersion.Version);
+            }
 
-            _comboPrefixes.Active = index;
-            _comboVersions.Active = Array.IndexOf(prefixes[index].Versions, profileData.FullVersion.Version);
+            _buttonJavaPath.SelectFilename(profileData.CustomJavaPath);
+            _entryJavaArgs.Text = profileData.CustomJavaArgs;
+            
+            _toggleJavaPath.Active = profileData.UseCustomJavaPath;
+            _buttonJavaPath.Sensitive = profileData.UseCustomJavaPath;
+            
+            _toggleJavaArgs.Active = profileData.UseCustomJavaArgs;
+            _entryJavaArgs.Sensitive = profileData.UseCustomJavaArgs;
+            
+            _toggleJavaPath.Toggled += (s, a) => _buttonJavaPath.Sensitive = _toggleJavaPath.Active;
+            _toggleJavaArgs.Toggled += (s, a) => _entryJavaArgs.Sensitive = _toggleJavaArgs.Active;
         }
 
         private void UpdateVersionsCombo(object sender, EventArgs e) {
@@ -75,7 +92,11 @@ namespace TtyhLauncher.GTK {
             var profileId = _entryName.Text;
             var profileData = new ProfileData {
                 FullVersion = new FullVersionId(_prefixes[index].Id, _comboVersions.ActiveText),
-                CheckVersionFiles = _toggleCheckVersion.Active
+                CheckVersionFiles = _toggleCheckVersion.Active,
+                UseCustomJavaPath = _toggleJavaPath.Active,
+                CustomJavaPath = _buttonJavaPath.Filename,
+                UseCustomJavaArgs = _toggleJavaArgs.Active,
+                CustomJavaArgs = _entryJavaArgs.Text
             };
 
             _buttonSave.Sensitive = false;
