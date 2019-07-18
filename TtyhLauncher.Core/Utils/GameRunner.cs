@@ -81,7 +81,13 @@ namespace TtyhLauncher.Utils {
 
             classPath.Add(Path.Combine(_versionsPath, prefix, version, $"{version}.jar"));
 
-            var args = new List<string> {
+            var args = new List<string>(25);
+
+            if (data.UseCustomJavaArgs && !string.IsNullOrEmpty(data.CustomJavaArgs)) {
+                args.AddRange(data.CustomJavaArgs.Trim().Split(' '));
+            }
+            
+            args.AddRange(new [] {
                 "-Dline.separator=\r\n",
                 "-Dfile.encoding=UTF8",
                 "-Dminecraft.launcher.brand=" + _launcherName,
@@ -90,7 +96,7 @@ namespace TtyhLauncher.Utils {
                 "-cp",
                 string.Join(Platform.ClassPathSeparator, classPath),
                 versionIndex.MainClass
-            };
+            });
 
             var profileDir = Path.Combine(_profilesPath, id);
             var gameArgsMap = new Dictionary<string, string> {
@@ -115,8 +121,13 @@ namespace TtyhLauncher.Utils {
 
             args.AddRange(gameArguments);
 
-            _log.Info($"java {string.Join(' ', args)}");
-            var exitCode = await RunProcessAsync("java", profileDir, args);
+            var javaPath = "java";
+            if (data.UseCustomJavaPath && !string.IsNullOrEmpty(data.CustomJavaPath)) {
+                javaPath = data.CustomJavaPath;
+            }
+
+            _log.Info($"{javaPath} {string.Join(' ', args)}");
+            var exitCode = await RunProcessAsync(javaPath, profileDir, args);
             _log.Info($"Client terminated with exit code {exitCode}");
 
             Directory.Delete(nativesDir, true);
