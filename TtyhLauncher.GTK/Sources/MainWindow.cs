@@ -158,9 +158,13 @@ namespace TtyhLauncher.GTK {
 
         public bool AskForDownloads(int filesCount, long totalSize) {
             var size = GetHumanReadableSize(totalSize);
-            var msg = string.Format(Tr._("Need to download {0} files with the total size {1}."), filesCount, size);
+            var msg = Tr._n(
+                "Need to download {0} file with the total size {1}.",
+                "Need to download {0} files with the total size {1}.",
+                (ulong) filesCount);
+
             
-            return Msg.Ask(this, Tr._("Need to download files"), msg);
+            return Msg.Ask(this, Tr._("Need to download files"), string.Format(msg, filesCount, size));
         }
 
         private static string GetHumanReadableSize(long size) {

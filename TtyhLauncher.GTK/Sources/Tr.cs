@@ -23,7 +23,7 @@ namespace TtyhLauncher.GTK {
             }
         }
 
-        public static string _p(string msgSingle, string msgPlural, ulong n) {
+        public static string _n(string msgSingle, string msgPlural, ulong n) {
             using (var cStrMsgSingle = new CStringHolder(msgSingle))
             using (var cStrMsgPlural = new CStringHolder(msgPlural)) {
                 var ptr = ngettext(cStrMsgSingle.Ptr, cStrMsgPlural.Ptr, n);

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-07-18 22:13+0300\n"
-"PO-Revision-Date: 2019-07-18 22:20+0300\n"
+"POT-Creation-Date: 2019-07-18 22:44+0300\n"
+"PO-Revision-Date: 2019-07-18 22:44+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -139,56 +139,59 @@ msgstr "\"Тонкий\" скин"
 msgid "Upload"
 msgstr "Загрузить"
 
-#: Sources/MainWindow.cs:166
+#: Sources/MainWindow.cs:162
 #, csharp-format
-msgid "Need to download {0} files with the total size {1}."
-msgstr "Необходимо загрузить {0} файлов размером {1}."
+msgid "Need to download {0} file with the total size {1}."
+msgid_plural "Need to download {0} files with the total size {1}."
+msgstr[0] "Необходимо загрузить {0} файл размером {1}."
+msgstr[1] "Необходимо загрузить {0} файла размером {1}."
+msgstr[2] "Необходимо загрузить {0} файлов размером {1}."
 
-#: Sources/MainWindow.cs:168
+#: Sources/MainWindow.cs:167
 msgid "Need to download files"
 msgstr "Требуется загрузка файлов"
 
-#: Sources/MainWindow.cs:177
+#: Sources/MainWindow.cs:176
 msgid "GiB"
 msgstr "ГиБ"
 
-#: Sources/MainWindow.cs:180
+#: Sources/MainWindow.cs:179
 msgid "MiB"
 msgstr "МиБ"
 
-#: Sources/MainWindow.cs:183
+#: Sources/MainWindow.cs:182
 msgid "KiB"
 msgstr "КиБ"
 
-#: Sources/MainWindow.cs:185
+#: Sources/MainWindow.cs:184
 msgid "B"
 msgstr "Б"
 
-#: Sources/MainWindow.cs:189
+#: Sources/MainWindow.cs:188
 msgid "Downloading files"
 msgstr "Загрузка файлов"
 
-#: Sources/MainWindow.cs:195
+#: Sources/MainWindow.cs:194
 msgid "Checking files"
 msgstr "Проверка файлов"
 
-#: Sources/MainWindow.cs:225
+#: Sources/MainWindow.cs:224
 #, csharp-format
 msgid "Profile '{0}' will be removed."
 msgstr "Профиль \"{0}\" будет удален."
 
-#: Sources/MainWindow.cs:226
+#: Sources/MainWindow.cs:225
 msgid "All data related to the profile will be lost!"
 msgstr "Все данные связанные с профилем будут потеряны!"
 
-#: Sources/MainWindow.cs:227
+#: Sources/MainWindow.cs:226
 msgid ""
 "This is the last one confirmation. Please, check the profile name again."
 msgstr ""
 "Это последнее подтверждение. Пожалуйста, убедитесь что выбрали нужный "
 "профиль."
 
-#: Sources/MainWindow.cs:229
+#: Sources/MainWindow.cs:228
 msgid "Confirm a profile deletion"
 msgstr "Подтвердите удаление профиля"
 
