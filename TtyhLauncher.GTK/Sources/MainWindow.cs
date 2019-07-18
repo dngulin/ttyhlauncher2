@@ -163,15 +163,9 @@ namespace TtyhLauncher.GTK {
 
         public bool AskForDownloads(int filesCount, long totalSize) {
             var size = GetHumanReadableSize(totalSize);
-            var msg = $"Need to download {filesCount} files with the total size {size}.";
+            var msg = string.Format(Tr._("Need to download {0} files with the total size {1}."), filesCount, size);
             
-            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Question, ButtonsType.OkCancel, msg);
-            dialog.Title = "Downloads required";
-            
-            var result = (ResponseType) dialog.Run();
-            dialog.Destroy();
-
-            return result == ResponseType.Ok;
+            return Msg.Ask(this, Tr._("Need to download files"), msg);
         }
 
         private static string GetHumanReadableSize(long size) {
@@ -180,25 +174,25 @@ namespace TtyhLauncher.GTK {
             const long kb = 1024;
             
             if (size > gb)
-                return $"{(float) size / gb:F2} GiB";
+                return ((float) size / gb).ToString("F2") + Tr._("GiB");
             
             if (size > mb)
-                return $"{(float) size / mb:F2} MiB";
+                return ((float) size / mb).ToString("F2") + Tr._("MiB");
             
             if (size > kb)
-                return $"{(float) size / kb:F2} KiB";
+                return ((float) size / kb).ToString("F2") + Tr._("KiB");
 
-            return $"{size} B";
+            return size + Tr._("B");
         }
 
         public IProgress<DownloadingState> ShowDownloadingTask() {
-            _labelTask.Text = "Downloading files";
+            _labelTask.Text = Tr._("Downloading files");
             ShowTask();
             return new DownloadingProgress(_pbTask);
         }
         
         public IProgress<CheckingState> ShowCheckingTask() {
-            _labelTask.Text = "Checking files";
+            _labelTask.Text = Tr._("Checking files");
             ShowTask();
             return new CheckingProgress(_pbTask);
         }

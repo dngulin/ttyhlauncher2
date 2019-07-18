@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-07-17 23:36+0300\n"
+"PO-Revision-Date: 2019-07-17 23:36+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
+"GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;"
+"_p:1c,2;_pn:1c,2,3\n"
+"X-Poedit-SearchPath-0: Resourses\n"
+"X-Poedit-SearchPath-1: Sources\n"
+
+#: Resourses/MainWindow.glade:12
+msgid "Edit..."
+msgstr "Изменить..."
+
+#: Resourses/MainWindow.glade:20
+msgid "Add..."
+msgstr "Добавить..."
+
+#: Resourses/MainWindow.glade:28
+msgid "Remove..."
+msgstr "Удалить..."
+
+#: Resourses/MainWindow.glade:58
+msgid "Options"
+msgstr "Опции"
+
+#: Resourses/MainWindow.glade:68
+msgid "Offline Mode"
+msgstr "Играть оффлайн"
+
+#: Resourses/MainWindow.glade:82
+msgid "Save Password"
+msgstr "Хранить пароль"
+
+#: Resourses/MainWindow.glade:90
+msgid "Hide Launcher"
+msgstr "Скрывать лаунчер"
+
+#: Resourses/MainWindow.glade:102
+msgid "Tools"
+msgstr "Инструменты"
+
+#: Resourses/MainWindow.glade:112
+msgid "Upload Skin..."
+msgstr "Загрузить скин..."
+
+#: Resourses/MainWindow.glade:124
+msgid "Help"
+msgstr "Помощь"
+
+#: Resourses/MainWindow.glade:134
+msgid "About"
+msgstr "О программе"
+
+#: Resourses/MainWindow.glade:187
+msgid "There are no active tasks..."
+msgstr "Нет активных задач..."
+
+#: Resourses/MainWindow.glade:206
+msgid "Downloading"
+msgstr "Загрузка"
+
+#: Resourses/MainWindow.glade:229
+msgid "Cancel"
+msgstr "Отмена"
+
+#: Resourses/MainWindow.glade:312
+msgid "Play"
+msgstr "Играть"
+
+#: Resourses/MainWindow.glade:336
+msgid "Password"
+msgstr "Пароль"
+
+#: Resourses/MainWindow.glade:348
+msgid "Player"
+msgstr "Игрок"
+
+#: Resourses/MainWindow.glade:360
+msgid "Profile"
+msgstr "Профиль"
+
+#: Resourses/ProfileWindow.glade:7
+msgid "Manage Profile"
+msgstr "Упаравление профилем"
+
+#: Resourses/ProfileWindow.glade:53
+msgid "Prefix"
+msgstr "Префикс"
+
+#: Resourses/ProfileWindow.glade:65
+msgid "Version"
+msgstr "Версия"
+
+#: Resourses/ProfileWindow.glade:81
+msgid "Name"
+msgstr "Название"
+
+#: Resourses/ProfileWindow.glade:127
+msgid "General"
+msgstr "Основные"
+
+#: Resourses/ProfileWindow.glade:154
+msgid "Check version files before run"
+msgstr "Проверять файлы версии перед запуском"
+
+#: Resourses/ProfileWindow.glade:171
+msgid "Other"
+msgstr "Прочее"
+
+#: Resourses/ProfileWindow.glade:201
+msgid "Save"
+msgstr "Сохранить"
+
+#: Resourses/SkinUploadWindow.glade:7
+msgid "Upload Skin"
+msgstr "Загрузить скин"
+
+#: Resourses/SkinUploadWindow.glade:42
+msgid "Skin file"
+msgstr "Файл скина"
+
+#: Resourses/SkinUploadWindow.glade:64
+msgid "Slim skin"
+msgstr "\"Тонкий\" скин"
+
+#: Resourses/SkinUploadWindow.glade:105
+msgid "Upload"
+msgstr "Загрузить"
+
+#: Sources/MainWindow.cs:166
+#, csharp-format
+msgid "Need to download {0} files with the total size {1}."
+msgstr "Необходимо загрузить {0} файлов размером {1}."
+
+#: Sources/MainWindow.cs:168
+msgid "Need to download files"
+msgstr "Требуется загрузка файлов"
+
+#: Sources/MainWindow.cs:177
+msgid "GiB"
+msgstr "ГиБ"
+
+#: Sources/MainWindow.cs:180
+msgid "MiB"
+msgstr "МиБ"
+
+#: Sources/MainWindow.cs:183
+msgid "KiB"
+msgstr "КиБ"
+
+#: Sources/MainWindow.cs:185
+msgid "B"
+msgstr "Б"
+
+#: Sources/MainWindow.cs:189
+msgid "Downloading files"
+msgstr "Загрузка файлов"
+
+#: Sources/MainWindow.cs:195
+msgid "Checking files"
+msgstr "Проверка файлов"
+
+#: Sources/Msg.cs:7
+msgid "Error"
+msgstr "Ошибка"
+
+#: Sources/ProfileWindow.cs:71
+msgid "Incorrect profile version!"
+msgstr "Некорректная версия профиля!"
+
+#: Sources/ProfileWindow.cs:89
+msgid "Incorrect profile name!"
+msgstr "Некорректное название профиля!"
+
+#: Sources/ProfileWindow.cs:92
+msgid "Incorrect game version!"
+msgstr "Некорректная версия профиля!"
+
+#: Sources/ProfileWindow.cs:95
+msgid "Failed to save profile! See details in the log."
+msgstr "Не удалось сохранить профиль! Подробная информация в логе."
+
+#: Sources/SkinUploadWindow.cs:33 Sources/SkinUploadWindow.cs:37
+msgid "Failed to upload skin!"
+msgstr "Не удалось загрузить скин!"
+
+#: Sources/Tr.cs:14
+msgid "test me"
+msgstr "проверь меня"

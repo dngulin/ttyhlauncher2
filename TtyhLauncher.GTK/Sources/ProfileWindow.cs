@@ -68,7 +68,7 @@ namespace TtyhLauncher.GTK {
         private void OnSaveClicked(object sender, EventArgs e) {
             var index = _comboPrefixes.Active;
             if (index < 0 || index >= _prefixes.Length) {
-                ShowError("wrong_version");
+                Msg.Error(this, Tr._("Incorrect profile version!"));
                 return;
             }
 
@@ -86,13 +86,13 @@ namespace TtyhLauncher.GTK {
                 success = true;
             }
             catch (InvalidProfileNameException) {
-                ShowError("wrong_profile_name");
+                Msg.Error(this, Tr._("Incorrect profile name!"));
             }
             catch (InvalidProfileVersionException) {
-                ShowError("wrong_profile_data");
+                Msg.Error(this, Tr._("Incorrect game version!"));
             }
             catch {
-                ShowError("cant_save_profile");
+                Msg.Error(this, Tr._("Failed to save profile! See details in the log."));
             }
 
             _buttonSave.Sensitive = true;
@@ -101,13 +101,6 @@ namespace TtyhLauncher.GTK {
                 Hide();
                 Destroy();
             }
-        }
-
-        private void ShowError(string message) {
-            var dialog = new MessageDialog(this, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, message);
-            dialog.Title = "Error";
-            dialog.Run();
-            dialog.Destroy();
         }
     }
 }

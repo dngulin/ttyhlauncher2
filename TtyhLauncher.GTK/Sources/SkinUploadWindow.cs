@@ -30,11 +30,11 @@ namespace TtyhLauncher.GTK {
                 success = true;
             }
             catch (ErrorAnswerException answerException) {
-                Msg.Error(this, "Failed to upload skin", answerException.Message);
+                Msg.Error(this, Tr._("Failed to upload skin!"), answerException.Message);
                 success = false;
             }
             catch {
-                Msg.Error(this, "Failed to upload skin");
+                Msg.Error(this, Tr._("Failed to upload skin!"));
                 success = false;
             }
 

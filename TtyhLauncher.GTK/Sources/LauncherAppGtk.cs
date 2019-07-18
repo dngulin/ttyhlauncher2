@@ -10,6 +10,9 @@ namespace TtyhLauncher.GTK {
 
         public LauncherAppGtk(string appId) {
             _appId = appId;
+            
+            Tr.InitCatalog("ui-gtk", "Translations");
+            
             Application.Init();
             GLib.ExceptionManager.UnhandledException += args => {
                 var msg = (args.ExceptionObject as Exception)?.Message ?? "UNKNOWN_ERROR";

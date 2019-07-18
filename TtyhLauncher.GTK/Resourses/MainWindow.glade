@@ -189,10 +189,6 @@
                   <attribute name="style" value="oblique"/>
                 </attributes>
               </object>
-              <packing>
-                <property name="name">page1</property>
-                <property name="title" translatable="yes">page1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkBox" id="_boxTask">
@@ -244,8 +240,6 @@
                 </child>
               </object>
               <packing>
-                <property name="name">task</property>
-                <property name="title" translatable="yes">task</property>
                 <property name="position">1</property>
               </packing>
             </child>
