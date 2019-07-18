@@ -92,12 +92,13 @@ namespace TtyhLauncher.Utils {
                 versionIndex.MainClass
             };
 
+            var profileDir = Path.Combine(_profilesPath, id);
             var gameArgsMap = new Dictionary<string, string> {
                 {"${auth_player_name}", userName},
                 {"${version_name}", version},
                 {"${auth_uuid}", clientToken},
                 {"${auth_access_token}", accessToken},
-                {"${game_directory}", Path.Combine(_profilesPath, id)},
+                {"${game_directory}", profileDir},
                 {"${assets_root}", _assetsPath},
                 {"${assets_index_name}", IndexTool.GetAssetIndexName(versionIndex)},
                 {"${user_properties}", "{}"},
@@ -115,16 +116,19 @@ namespace TtyhLauncher.Utils {
             args.AddRange(gameArguments);
 
             _log.Info($"java {string.Join(' ', args)}");
-            var exitCode = await RunProcessAsync("java", args);
+            var exitCode = await RunProcessAsync("java", profileDir, args);
             _log.Info($"Client terminated with exit code {exitCode}");
 
             Directory.Delete(nativesDir, true);
         }
 
-        private async Task<int> RunProcessAsync(string application, IEnumerable<string> args) {
+        private async Task<int> RunProcessAsync(string application, string workDir, IEnumerable<string> args) {
             var info = new ProcessStartInfo(application) {
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WorkingDirectory = workDir
             };
 
             foreach (var arg in args) {
