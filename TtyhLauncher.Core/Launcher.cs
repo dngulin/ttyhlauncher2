@@ -181,7 +181,7 @@ namespace TtyhLauncher {
                 FullVersion = version
             };
             
-            _ui.ShowProfile("New profile", data, _versions.Prefixes, TryCreateProfile);
+            _ui.ShowProfile(_tr._("New profile"), data, _versions.Prefixes, TryCreateProfile);
         }
 
         private void TryCreateProfile(string id, ProfileData data) {
