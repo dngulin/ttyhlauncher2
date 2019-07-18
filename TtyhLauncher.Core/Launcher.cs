@@ -45,8 +45,9 @@ namespace TtyhLauncher {
             ILauncherUi ui,
             ILogger logger,
             string launcherName) {
-            
-            _tr = new Translator(new Catalog("core", "Translations"));
+
+            var translationsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Translations");
+            _tr = new Translator(new Catalog("core", translationsPath));
 
             _settings = settings;
             _versions = versions;
