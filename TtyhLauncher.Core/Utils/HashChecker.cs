@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -11,11 +12,9 @@ using TtyhLauncher.Utils.Data;
 namespace TtyhLauncher.Utils {
     public class HashChecker {
         private readonly WrappedLogger _log;
-        private readonly StringBuilder _sb;
-        
+
         public HashChecker(ILogger logger) {
             _log = new WrappedLogger(logger, "HashChecker");
-            _sb = new StringBuilder(40);
         }
         
         public async Task<DownloadTarget[]> CheckFiles(
@@ -32,26 +31,38 @@ namespace TtyhLauncher.Utils {
                 CurrentFile = 0,
                 TotalFiles = targets.Length
             };
-            
 
-            foreach (var target in targets) {
-                _log.Info($"Checking file {target.Path}...");
-                
-                state.FileName = target.Path;
-                state.CurrentFile++;
-                progress?.Report(state);
-                
-                if (!await IsSameFileExists(target, ct))
-                    result.Add(target);
+            var context = SynchronizationContext.Current;
+            void Report(string path) {
+                context?.Post(args => {
+                    var filePath = args as string ?? string.Empty;
+                    _log.Info($"Checking file {filePath}...");
+                    
+                    state.FileName = filePath;
+                    state.CurrentFile++;
+                    
+                    progress?.Report(state);
+                }, path);
             }
+
+            var tasks = targets.Select(target => Task.Run(() => CheckTarget(target, result, Report), ct));
+            await Task.WhenAll(tasks);
             
             _log.Info($"Checking files completed. Need to update {result.Count} files.");
             return result.ToArray();
         }
 
-        private async Task<bool> IsSameFileExists(DownloadTarget target, CancellationToken ct = default(CancellationToken)) {
-            ct.ThrowIfCancellationRequested();
+        private static void CheckTarget(DownloadTarget target, List<DownloadTarget> result, Action<string> report) {
+            report?.Invoke(target.Path);
+
+            if (IsSameFileExists(target))
+                return;
             
+            lock (result)
+                result.Add(target);
+        }
+
+        private static bool IsSameFileExists(DownloadTarget target) {
             if (!File.Exists(target.Path))
                 return false;
             
@@ -64,13 +75,12 @@ namespace TtyhLauncher.Utils {
             
             using (var fileStream = File.OpenRead(target.Path))
             using (var sha1 = new SHA1CryptoServiceProvider()) {
-                var hash = await Task.Run(() => sha1.ComputeHash(fileStream), ct);
+                var sb = new StringBuilder(40);
+                
+                foreach (var b in sha1.ComputeHash(fileStream))
+                    sb.Append(b.ToString("x2"));
 
-                _sb.Clear();
-                foreach (var b in hash)
-                    _sb.Append(b.ToString("x2"));
-
-                return _sb.ToString() == target.Sha1;
+                return sb.ToString() == target.Sha1;
             }
         }
     }
