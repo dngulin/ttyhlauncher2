@@ -90,8 +90,8 @@ namespace TtyhLauncher.GTK {
             builder.Autoconnect(this);
         }
         
-        public MainWindow(string title) : this(new Builder("MainWindow.glade")) {
-            Title = title;
+        public MainWindow(string appName, string appVersion, string appUrl) : this(new Builder("MainWindow.glade")) {
+            Title = appName;
             
             Icon = LoadPixbuf("icon.png");
             _imgLogo.Pixbuf = LoadPixbuf("logo.png");
@@ -119,6 +119,23 @@ namespace TtyhLauncher.GTK {
             _actRemoveProfile.Activated += (s, a) => OnRemoveProfileClicked?.Invoke();
 
             _actUploadSkin.Activated += (s, a) => OnUploadSkinClicked?.Invoke();
+
+            _actAbout.Activated += (s, a) => {
+                var dlg = new AboutDialog {
+                    TransientFor = this,
+                    Modal = true,
+                    IconName = "help-about",
+                    Logo = LoadPixbuf("icon.png"),
+                    ProgramName = appName,
+                    Version = appVersion,
+                    Comments =  Tr._("This is the GTK3 user interface for the TtyhLauncher2"),
+                    WebsiteLabel = Tr._("GitHub repository"),
+                    Website = appUrl,
+                    LicenseType = License.Gpl30
+                };
+                dlg.Run();
+                dlg.Destroy();
+            };
         }
         
         public void SetWindowVisible(bool isVisible) {

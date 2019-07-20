@@ -28,8 +28,8 @@ namespace TtyhLauncher.GTK {
             };
         }
         
-        protected override ILauncherUi CreateUi(string title) {
-            var ui = new MainWindow(title);
+        protected override ILauncherUi CreateUi(string appName, string appVersion, string appUrl) {
+            var ui = new MainWindow(appName, appVersion, appUrl);
                 
             var gtkApplication = new Application(_appId, GLib.ApplicationFlags.None);
             gtkApplication.Register(GLib.Cancellable.Current);

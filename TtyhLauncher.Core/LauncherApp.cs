@@ -16,6 +16,7 @@ namespace TtyhLauncher {
             
             const string appName = "TtyhLauncher2";
             const string appVersion = "0.0.1";
+            const string appUrl = "https://github.com/dngulin/ttyhlauncher2";
             
             const string storeUrl = "https://ttyh.ru/files/newstore";
             const string masterUrl = "https://master.ttyh.ru";
@@ -41,7 +42,7 @@ namespace TtyhLauncher {
                 var ttyhClient = new TtyhClient(masterUrl, appVersion, settings.Ticket, httpClient, serializer, logger);
                 var runner = new GameRunner(directory, json, logger, appName, appVersion);
                 
-                var ui = CreateUi($"{appName} - {appVersion}");
+                var ui = CreateUi(appName, appVersion, appUrl);
                 var launcher = new Launcher(settings, versions, profiles, httpClient, ttyhClient, runner, ui, logger, appName);
                 
                 launcher.Start();
@@ -49,7 +50,7 @@ namespace TtyhLauncher {
             }
         }
 
-        protected abstract ILauncherUi CreateUi(string title);
+        protected abstract ILauncherUi CreateUi(string appName, string appVersion, string appUrl);
         protected abstract void RunEventLoop();
     }
 }
