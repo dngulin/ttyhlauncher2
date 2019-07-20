@@ -21,6 +21,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="**\*.png" />
+        <EmbeddedResource Include="**\*.png">
+            <LogicalName>%(Filename)%(Extension)</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="**\*.mo">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

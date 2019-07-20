@@ -1,5 +1,7 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using Gdk;
 using Gtk;
 using Pango;
 using TtyhLauncher.Profiles.Data;
@@ -43,6 +45,8 @@ namespace TtyhLauncher.GTK {
         [FormItem] private readonly MenuBar _menu = null;
         [FormItem] private readonly ScrolledWindow _scroll = null;
         [FormItem] private readonly Grid _form = null;
+        
+        [FormItem] private readonly Image _imgLogo = null;
 
         public event Action OnExit;
         public event Action OnPlayButtonClicked;
@@ -88,6 +92,9 @@ namespace TtyhLauncher.GTK {
         
         public MainWindow(string title) : this(new Builder("MainWindow.glade")) {
             Title = title;
+            
+            Icon = LoadPixbuf("icon.png");
+            _imgLogo.Pixbuf = LoadPixbuf("logo.png");
 
             DeleteEvent += (s, a) => { OnExit?.Invoke(); Application.Quit(); };
             
@@ -164,7 +171,7 @@ namespace TtyhLauncher.GTK {
                 (ulong) filesCount);
 
             
-            return Msg.Ask(this, Tr._("Need to download files"), string.Format(msg, filesCount, size));
+            return Msg.Info(this, Tr._("Need to download files"), string.Format(msg, filesCount, size));
         }
 
         private static string GetHumanReadableSize(long size) {
@@ -228,11 +235,17 @@ namespace TtyhLauncher.GTK {
             var title = Tr._("Confirm a profile deletion");
 
             foreach (var question in questions) {
-                if (!Msg.Ask(this, title, question))
+                if (!Msg.Info(this, title, question))
                     return false;
             }
 
             return true;
+        }
+
+        private Pixbuf LoadPixbuf(string name) {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name)) {
+                return new Pixbuf(stream);
+            }
         }
     }
 }
